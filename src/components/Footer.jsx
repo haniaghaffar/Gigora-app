@@ -1,51 +1,76 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="bg-slate-800 text-white py-10">
+    <footer className="bg-[#1E3A5F] text-white py-12">
       <div className="max-w-7xl mx-auto px-6">
 
         <div className="flex flex-col md:flex-row justify-between items-center">
 
           {/* Logo */}
-          <a href="/#/" className="text-2xl font-bold text-blue-400 hover:text-blue-300 transition">
+          <Link
+            to="/"
+            className="text-3xl font-bold hover:text-[#EFF6FF] transition"
+          >
             GIGORA
-          </a>
+          </Link>
 
-          {/* Links */}
-          <ul className="flex gap-6 mt-6 md:mt-0 text-gray-300">
+          {/* Navigation */}
+          <ul className="flex flex-wrap justify-center gap-6 mt-6 md:mt-0">
+
             <li>
-              <a href="#features" className="hover:text-white transition">
+              <a
+                href="#features"
+                className="text-white hover:text-[#1A56DB] transition"
+              >
                 Features
               </a>
             </li>
 
             <li>
-              <a href="#pricing" className="hover:text-white transition">
+              <a
+                href="#pricing"
+                className="text-white hover:text-[#1A56DB] transition"
+              >
                 Pricing
               </a>
             </li>
 
             <li>
-              <a href="/#/login" className="hover:text-white transition">
+              <Link
+                to="/login"
+                className="text-white hover:text-[#1A56DB] transition"
+              >
                 Login
-              </a>
+              </Link>
             </li>
 
             <li>
-              <a href="#contact" className="hover:text-white transition">
+              <a
+                href="#contact"
+                className="text-white hover:text-[#1A56DB] transition"
+              >
                 Contact
               </a>
             </li>
+
           </ul>
 
         </div>
 
-        <hr className="my-6 border-gray-600" />
+        <hr className="border-gray-500 my-8" />
 
-        <p className="text-center text-gray-400">
-          © 2026 Mufsa Developers. All rights reserved.
-        </p>
+        <div className="text-center">
+          <p className="text-[#6B7280]">
+            © 2026 Gigora. All rights reserved.
+          </p>
+
+          <p className="text-[#6B7280] mt-2 text-sm">
+            AI-powered tools to help freelancers optimize profiles,
+            improve gig SEO, and generate winning proposals.
+          </p>
+        </div>
 
       </div>
     </footer>

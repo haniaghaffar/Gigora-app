@@ -1,41 +1,63 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import Button from "../components/Button";
 
 function Navbar() {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white text-darkNavy shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        
         {/* Logo */}
-        <a href="/#/" className="text-2xl font-bold text-blue-700 hover:text-blue-800 transition">
+        <Link to="/" className="text-2xl font-bold tracking-wide text-darkNavy">
           GIGORA
-        </a>
+        </Link>
 
-        {/* Navigation Links */}
-        <ul className="hidden md:flex items-center gap-8 text-slate-800 font-medium">
-          <li>
-            <a href="#features" className="hover:text-blue-700 transition">
-              Features
-            </a>
-          </li>
+        {/* Mobile menu button */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden focus:outline-none focus:ring-2 focus:ring-darkNavy"
+          aria-label="Toggle navigation menu"
+        >
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+            />
+          </svg>
+        </button>
 
-          <li>
-            <a href="#pricing" className="hover:text-blue-700 transition">
-              Pricing
-            </a>
-          </li>
-
-          <li>
-            <a href="/#/login" className="hover:text-blue-700 transition">
-              Login
-            </a>
-          </li>
+        {/* Desktop navigation */}
+        <ul className="hidden md:flex items-center gap-8">
+          <li><a href="#features" className="text-darkText hover:text-primaryBlue transition duration-200">Features</a></li>
+          <li><a href="#pricing" className="text-darkText hover:text-primaryBlue transition duration-200">Pricing</a></li>
+          <li><Link to="/login" className="text-darkText hover:text-primaryBlue transition duration-200">Login</Link></li>
         </ul>
 
-        {/* Button */}
-        <a href="/#/signup" className="bg-blue-700 text-white px-5 py-2 rounded-lg hover:bg-blue-800 transition inline-block">
-          Get Started
-        </a>
+        {/* CTA */}
+        <Link to="/signup">
+          <Button className="hidden md:inline-block">Get Started</Button>
+        </Link>
       </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <ul className="md:hidden bg-white text-darkNavy py-4 space-y-2">
+          <li><a href="#features" className="block px-4 hover:bg-lightBlue transition">Features</a></li>
+          <li><a href="#pricing" className="block px-4 hover:bg-lightBlue transition">Pricing</a></li>
+          <li><Link to="/login" className="block px-4 hover:bg-lightBlue transition">Login</Link></li>
+          <li><Link to="/signup" className="block w-full text-center bg-primaryBlue text-white py-2 rounded-lg mt-2">Get Started</Link></li>
+        </ul>
+      )}
     </nav>
   );
 }
