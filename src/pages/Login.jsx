@@ -6,7 +6,7 @@ function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-xl p-8 shadow-lg border border-gray-200">
         <h1 className="text-3xl font-bold text-center mb-6 text-primaryBlue">
-          Intern Login
+          Login
         </h1>
 
         <input
