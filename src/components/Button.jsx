@@ -21,14 +21,14 @@ export default function Button({
   };
 
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={`${baseClasses} ${variants[variant]} ${className}`}
-      {...rest}
-    >
-      {children}
-    </button>
-  );
+  <button
+    type={type}
+    onClick={onClick}
+    disabled={disabled}
+    className={`${baseClasses} ${className} ${variants[variant]}`}
+    {...rest}
+  >
+    {children}
+  </button>
+);
 }

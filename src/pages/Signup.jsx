@@ -11,7 +11,7 @@ function Signup() {
       <div className="w-full max-w-md bg-white rounded-xl p-8 shadow-lg border border-gray-200">
 
         <h1 className="text-3xl font-bold text-center mb-6 text-primaryBlue">
-          Intern Signup
+          Signup
         </h1>
 
         <input

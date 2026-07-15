@@ -16,8 +16,9 @@ function ProposalGenerator() {
       setToastType("error");
       return;
     }
+
     setLoading(true);
-    // Simulate async generation
+
     setTimeout(() => {
       setProposal(`Dear Client,
 
@@ -26,6 +27,7 @@ I am excited to apply for your project. I have experience in React, JavaScript, 
 I can deliver high-quality work on time and would love to discuss your project further.
 
 Best Regards.`);
+
       setLoading(false);
       setToastMessage("Proposal generated");
       setToastType("success");
@@ -39,51 +41,88 @@ Best Regards.`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow">
+    <div className="min-h-screen bg-gray-50 p-8">
 
-        <h1 className="text-3xl font-bold text-blue-700">
+      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-md border border-gray-100">
+
+        <h1 className="text-3xl font-bold text-primaryBlue">
           Proposal Generator
         </h1>
+
+        <p className="mt-2 text-gray-600">
+          Generate AI-powered proposals that help you win more projects.
+        </p>
 
         <textarea
           value={jobPost}
           onChange={(e) => setJobPost(e.target.value)}
           placeholder="Paste job post here..."
-          className="w-full mt-6 h-44 border rounded-lg p-4"
+          className="
+          w-full mt-6 h-44 border border-gray-300 rounded-lg p-4
+          text-gray-800 resize-none
+          focus:outline-none focus:ring-2 focus:ring-primaryBlue
+          "
         />
 
         <button
           onClick={handleGenerate}
           disabled={loading || jobPost.trim() === ""}
-          className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="
+          mt-5 bg-primaryBlue text-white px-6 py-3 rounded-lg
+          font-medium
+          hover:opacity-90 transition-all duration-300
+          disabled:opacity-50 disabled:cursor-not-allowed
+          "
         >
           Generate Proposal
         </button>
 
+
         {loading && (
           <div className="mt-8 text-center">
             <Spinner />
-            <p className="mt-3 text-blue-700 font-medium">Generating proposal...</p>
+            <p className="mt-3 text-primaryBlue font-medium">
+              Generating proposal...
+            </p>
           </div>
         )}
+
+
         {proposal && (
-          <Card className="mt-8">
-            <h2 className="text-xl font-bold mb-4">Generated Proposal</h2>
-            <p className="whitespace-pre-line text-gray-700">{proposal}</p>
+          <Card className="mt-8 border border-gray-100">
+
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
+              Generated Proposal
+            </h2>
+
+            <p className="whitespace-pre-line text-gray-700 leading-7">
+              {proposal}
+            </p>
+
             <button
               onClick={copyProposal}
-              className="mt-5 bg-green-600 text-white px-5 py-2 rounded-lg"
+              className="
+              mt-5 bg-green-600 text-white px-5 py-2 rounded-lg
+              hover:bg-green-700 transition-all duration-300
+              "
             >
               Copy Proposal
             </button>
+
           </Card>
         )}
+
+
         {toastMessage && (
-          <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage("")} />
+          <Toast
+            message={toastMessage}
+            type={toastType}
+            onClose={() => setToastMessage("")}
+          />
         )}
 
       </div>
+
     </div>
   );
 }
