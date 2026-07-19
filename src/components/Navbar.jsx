@@ -1,9 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import { useAuth } from "../context/AuthContext";
+import { supabase } from "../services/supabase";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = React.useState(false);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
@@ -18,9 +23,20 @@ function Navbar() {
     setMenuOpen(false);
   };
 
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+    setMenuOpen(false);
+  };
+
+
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+
         {/* Logo */}
         <Link
           to="/"
@@ -29,111 +45,132 @@ function Navbar() {
           GIGORA
         </Link>
 
-        {/* Mobile Menu Button */}
+
+        {/* Mobile Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-primaryBlue rounded"
-          aria-label="Toggle navigation menu"
+          className="md:hidden text-gray-700"
         >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={
-                menuOpen
-                  ? "M6 18L18 6M6 6l12 12"
-                  : "M4 6h16M4 12h16M4 18h16"
-              }
-            />
-          </svg>
+          ☰
         </button>
 
-        {/* Desktop Navigation */}
-        <ul className="hidden md:flex items-center gap-8">
-          <li>
-            <button
-              onClick={() => scrollToSection("features")}
-              className="text-gray-700 hover:text-primaryBlue transition duration-200"
-            >
-              Features
-            </button>
-          </li>
 
-          <li>
-            <button
-              onClick={() => scrollToSection("pricing")}
-              className="text-gray-700 hover:text-primaryBlue transition duration-200"
-            >
-              Pricing
-            </button>
-          </li>
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-8">
 
-          <li>
-            <Link
-              to="/login"
-              className="text-gray-700 hover:text-primaryBlue transition duration-200"
-            >
-              Login
-            </Link>
-          </li>
-        </ul>
+          <button
+            onClick={() => scrollToSection("features")}
+            className="text-gray-700 hover:text-primaryBlue"
+          >
+            Features
+          </button>
 
-        {/* CTA */}
-        <Link to="/signup">
-          <Button className="hidden md:inline-block">
-            Get Started
-          </Button>
-        </Link>
+
+          <button
+            onClick={() => scrollToSection("pricing")}
+            className="text-gray-700 hover:text-primaryBlue"
+          >
+            Pricing
+          </button>
+
+
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="text-gray-700 hover:text-primaryBlue"
+              >
+                Dashboard
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="text-red-500 hover:text-red-600"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-gray-700 hover:text-primaryBlue"
+              >
+                Login
+              </Link>
+
+              <Link to="/signup">
+                <Button>
+                  Get Started
+                </Button>
+              </Link>
+            </>
+          )}
+
+        </div>
+
       </div>
 
+
       {/* Mobile Menu */}
+
       {menuOpen && (
-        <ul className="md:hidden bg-white border-t border-gray-100 py-4 space-y-2">
-          <li>
-            <button
-              onClick={() => scrollToSection("features")}
-              className="block w-full text-left px-6 py-2 text-gray-700 hover:bg-blue-50 hover:text-primaryBlue"
-            >
-              Features
-            </button>
-          </li>
+        <div className="md:hidden bg-white border-t px-6 py-4 space-y-3">
 
-          <li>
-            <button
-              onClick={() => scrollToSection("pricing")}
-              className="block w-full text-left px-6 py-2 text-gray-700 hover:bg-blue-50 hover:text-primaryBlue"
-            >
-              Pricing
-            </button>
-          </li>
 
-          <li>
-            <Link
-              to="/login"
-              onClick={() => setMenuOpen(false)}
-              className="block px-6 py-2 text-gray-700 hover:bg-blue-50 hover:text-primaryBlue"
-            >
-              Login
-            </Link>
-          </li>
+          <button
+            onClick={() => scrollToSection("features")}
+            className="block text-gray-700"
+          >
+            Features
+          </button>
 
-          <li>
-            <Link
-              to="/signup"
-              onClick={() => setMenuOpen(false)}
-              className="block mx-6 text-center bg-primaryBlue text-white py-2 rounded-lg hover:opacity-90"
-            >
-              Get Started
-            </Link>
-          </li>
-        </ul>
+
+          <button
+            onClick={() => scrollToSection("pricing")}
+            className="block text-gray-700"
+          >
+            Pricing
+          </button>
+
+
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="block text-gray-700"
+                onClick={() => setMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="block text-red-500"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="block text-gray-700"
+              >
+                Login
+              </Link>
+
+              <Link to="/signup">
+                <Button className="w-full">
+                  Get Started
+                </Button>
+              </Link>
+            </>
+          )}
+
+        </div>
       )}
+
     </nav>
   );
 }

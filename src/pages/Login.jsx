@@ -1,60 +1,147 @@
-import React from "react";
+import { useState } from "react";
 import Button from "../components/Button";
+import { supabase } from "../services/supabase";
+import Toast from "../components/Toast";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("info");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setToastType("error");
+      setToastMessage("Please enter email and password");
+      return;
+    }
+
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setToastType("error");
+      setToastMessage(error.message);
+    } else {
+      setToastType("success");
+      setToastMessage("Login successful!");
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md bg-white rounded-xl p-8 shadow-lg border border-gray-200">
-        <h1 className="text-3xl font-bold text-center mb-6 text-primaryBlue">
-          Login
+    <div className="min-h-screen grid lg:grid-cols-2 bg-white">
+
+      {/* Left Side */}
+      <div className="hidden lg:flex flex-col justify-center px-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+
+        <h1 className="text-5xl font-bold mb-6">
+          Welcome Back to Gigora
         </h1>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border border-gray-300 p-3 rounded-lg mb-4 
-          text-gray-800 focus:outline-none focus:ring-2 focus:ring-primaryBlue"
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border border-gray-300 p-3 rounded-lg mb-4 
-          text-gray-800 focus:outline-none focus:ring-2 focus:ring-primaryBlue"
-        />
-
-        <Button className="w-full mb-4">
-          Login
-        </Button>
-
-<Button
-  variant="secondary"
-  className="w-full flex items-center justify-center gap-3"
->
-  <svg
-    className="w-5 h-5 flex-shrink-0"
-    viewBox="0 0 533.5 544.3"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path fill="#4285F4" d="M533.5 278.4c0-17.5-1.5-34.4-4.3-50.7H272v95.8h146.9c-6.3 33.8-25.4 62.4-54 81.4v67.8h87.1c51-47 80.5-116.4 80.5-194.3"/>
-    <path fill="#34A853" d="M272 544.3c73 0 134.3-24.2 179-65.7l-87.1-67.8c-24.2 16.3-55 25.9-91.9 25.9-70.7 0-130.6-47.6-152-111.6h-89v70.2c44.9 89.2 136.9 149.9 241 149.9"/>
-    <path fill="#FBBC05" d="M120 324.1c-10.5-31.5-10.5-65.6 0-97.1v-70.2h-89c-38.5 75.3-38.5 164.9 0 240.2l89-72.9"/>
-    <path fill="#EA4335" d="M272 107.5c39.6-.6 77.8 14.5 106.6 42.4l79.8-79.8C410.9 22.9 342.7-1.1 272 0 168 0 76 60.7 31 149.9l89 70.2c21.4-64 81.3-111.6 152-111.6"/>
-  </svg>
-
-  <span>Continue with Google</span>
-</Button>
-
-        <p className="text-center mt-5 text-sm text-gray-500">
-          Don't have an account?{" "}
-          <a
-            href="/#/signup"
-            className="text-primaryBlue font-medium hover:underline"
-          >
-            Signup
-          </a>
+        <p className="text-lg text-blue-100 leading-8">
+          AI-powered tools to optimize gigs, generate proposals,
+          and help freelancers win more projects.
         </p>
+
+        <div className="mt-12 space-y-4">
+          {[
+            "AI Proposal Generator",
+            "Gig SEO Optimizer",
+            "Profile Analyzer",
+          ].map((item) => (
+            <div key={item} className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-white rounded-full" />
+              <p>{item}</p>
+            </div>
+          ))}
+        </div>
+
       </div>
+
+
+      {/* Right Side */}
+      <div className="flex items-center justify-center px-6 py-12 bg-gray-50">
+
+        <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">
+              Sign In
+            </h2>
+
+            <p className="text-gray-500 mt-2">
+              Continue your freelancer journey
+            </p>
+          </div>
+
+
+          <div className="space-y-5">
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
+              className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+
+
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
+              className="w-full h-12 px-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+
+
+            <Button
+              onClick={handleLogin}
+              disabled={loading}
+              className="w-full h-12 rounded-xl"
+            >
+              {loading ? "Signing In..." : "Login"}
+            </Button>
+
+
+            <p className="text-center text-sm text-gray-500">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-blue-600 font-semibold"
+              >
+                Sign up
+              </Link>
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <Toast
+        message={toastMessage}
+        type={toastType}
+        onClose={()=>setToastMessage("")}
+      />
+
     </div>
   );
 }
