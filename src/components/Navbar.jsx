@@ -1,33 +1,20 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Menu,
-  LayoutDashboard,
-  LogOut,
-  LogIn,
-  UserPlus,
-} from "lucide-react";
-
+import { Menu, LayoutDashboard, LogOut, LogIn, UserPlus } from "lucide-react";
 import Button from "../components/Button";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../services/supabase";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = React.useState(false);
-
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
-
     if (section) {
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-
     setMenuOpen(false);
   };
 
@@ -37,69 +24,55 @@ function Navbar() {
     setMenuOpen(false);
   };
 
+  const isPro = user?.user_metadata?.plan?.toLowerCase() === "pro";
+
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link
-          to="/"
-          className="text-2xl font-bold tracking-wide text-primaryBlue"
-        >
+        <Link to="/" className="text-2xl font-bold tracking-wide text-primaryBlue">
           GIGORA
         </Link>
 
         {/* Mobile Button */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-gray-700"
-        >
+        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-gray-700">
           <Menu size={28} />
         </button>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          <button
-            onClick={() => scrollToSection("features")}
-            className="text-gray-700 hover:text-primaryBlue transition"
-          >
+          <button onClick={() => scrollToSection("features")} className="text-gray-700 hover:text-primaryBlue transition">
             Features
           </button>
-
-          <button
-            onClick={() => scrollToSection("pricing")}
-            className="text-gray-700 hover:text-primaryBlue transition"
-          >
+          <button onClick={() => scrollToSection("pricing")} className="text-gray-700 hover:text-primaryBlue transition">
             Pricing
           </button>
-
           {user ? (
             <>
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-2 text-gray-700 hover:text-primaryBlue transition"
-              >
+              <Link to="/dashboard" className="flex items-center gap-2 text-gray-700 hover:text-primaryBlue transition">
                 <LayoutDashboard size={18} />
                 Dashboard
               </Link>
-
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 text-red-500 hover:text-red-600 transition"
-              >
+              {/* Username with PRO badge */}
+              <div className="flex items-center gap-2">
+                <span className="text-gray-800">{user.user_metadata?.full_name || user.email}</span>
+                {isPro && (
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                    PRO
+                  </span>
+                )}
+              </div>
+              <button onClick={handleLogout} className="flex items-center gap-2 text-red-500 hover:text-red-600 transition">
                 <LogOut size={18} />
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="flex items-center gap-2 text-gray-700 hover:text-primaryBlue transition"
-              >
+              <Link to="/login" className="flex items-center gap-2 text-gray-700 hover:text-primaryBlue transition">
                 <LogIn size={18} />
                 Login
               </Link>
-
               <Link to="/signup">
                 <Button className="flex items-center gap-2">
                   <UserPlus size={18} />
@@ -114,50 +87,29 @@ function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t px-6 py-4 space-y-4">
-          <button
-            onClick={() => scrollToSection("features")}
-            className="block text-gray-700"
-          >
+          <button onClick={() => scrollToSection("features")} className="block text-gray-700">
             Features
           </button>
-
-          <button
-            onClick={() => scrollToSection("pricing")}
-            className="block text-gray-700"
-          >
+          <button onClick={() => scrollToSection("pricing")} className="block text-gray-700">
             Pricing
           </button>
-
           {user ? (
             <>
-              <Link
-                to="/dashboard"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2 text-gray-700"
-              >
+              <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-gray-700">
                 <LayoutDashboard size={18} />
                 Dashboard
               </Link>
-
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 text-red-500"
-              >
+              <button onClick={handleLogout} className="flex items-center gap-2 text-red-500">
                 <LogOut size={18} />
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2 text-gray-700"
-              >
+              <Link to="/login" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-gray-700">
                 <LogIn size={18} />
                 Login
               </Link>
-
               <Link to="/signup" onClick={() => setMenuOpen(false)}>
                 <Button className="w-full flex items-center justify-center gap-2">
                   <UserPlus size={18} />
