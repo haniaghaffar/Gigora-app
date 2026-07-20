@@ -1,28 +1,45 @@
 import { useState } from "react";
 import Card from "../components/Card";
-import Spinner from "../components/Spinner";
+import Button from "../components/Button";
+import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
 
 function GigSEO() {
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("info");
-  const [loading, setLoading] = useState(false);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
+  const [error, setError] = useState("");
+
+  const TITLE_LIMIT = 80;
+
   const handleOptimize = () => {
+    if (!title.trim() || !description.trim()) {
+      setError("Please enter both title and description.");
+      return;
+    }
+
+    if (title.length > TITLE_LIMIT) {
+      setError("Title exceeds 80 characters.");
+      return;
+    }
+
+    setError("");
     setLoading(true);
     setResult(null);
 
-    // Dummy AI response (replace with API later)
     setTimeout(() => {
       setResult({
-        title: "Professional React Developer | Modern Responsive Websites",
+        title:
+          "Professional React Developer | Modern Responsive Websites",
+
         description:
-          "I build fast, responsive, and modern React websites with clean UI and optimized performance.",
+          "I build fast, responsive and SEO optimized React websites using Tailwind CSS, JavaScript and modern UI practices.",
+
         keywords: [
           "React",
           "JavaScript",
@@ -33,114 +50,328 @@ function GigSEO() {
       });
 
       setLoading(false);
+
       setToastMessage("Gig optimized successfully!");
       setToastType("success");
+
     }, 2000);
   };
 
+  const copyText = (text) => {
+    navigator.clipboard.writeText(text);
+
+    setToastMessage("Copied successfully!");
+    setToastType("success");
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold text-blue-700">
-          Gig SEO Optimizer
-        </h1>
+    <div className="min-h-screen bg-gray-50 p-6 md:p-8">
 
-        <p className="mt-3 text-gray-600">
-          Improve your gig title, description, and keywords with AI-powered SEO
-          suggestions.
-        </p>
+      <div className="max-w-6xl mx-auto space-y-8">
 
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter your gig title..."
-          className="w-full border rounded-lg p-3 mt-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        {/* Header */}
 
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter your gig description..."
-          className="w-full border rounded-lg p-4 mt-5 h-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div>
 
-        <button
-          onClick={() => {
-            if (!title.trim() || !description.trim()) {
-              setToastMessage("Please fill in both title and description.");
-              setToastType("error");
-              return;
+          <h1 className="text-4xl font-bold text-gray-900">
+            Gig SEO Optimizer
+          </h1>
+
+          <p className="mt-3 text-gray-600">
+            Optimize your Fiverr or Upwork gig using AI powered SEO
+            suggestions.
+          </p>
+
+        </div>
+
+        {/* Form */}
+
+        <Card className="shadow-lg">
+
+          <h2 className="text-xl font-bold text-gray-900 mb-5">
+            Gig Information
+          </h2>
+
+          {/* Title */}
+
+          <label className="font-medium text-gray-700">
+            Gig Title
+          </label>
+
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter gig title..."
+            className="w-full mt-2 border rounded-lg p-3 focus:ring-2 focus:ring-blue-600 focus:outline-none"
+          />
+
+          <div className="flex justify-end mt-2">
+
+            <span
+              className={`text-sm ${
+                title.length > TITLE_LIMIT
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            >
+              {title.length}/{TITLE_LIMIT}
+            </span>
+
+          </div>
+
+          {/* Description */}
+
+          <label className="font-medium text-gray-700 mt-6 block">
+            Description
+          </label>
+
+          <textarea
+            value={description}
+            onChange={(e) =>
+              setDescription(e.target.value)
             }
+            placeholder="Describe your gig..."
+            className="w-full mt-2 h-44 border rounded-lg p-4 resize-none focus:ring-2 focus:ring-blue-600 focus:outline-none"
+          />
 
-            handleOptimize();
-          }}
-          disabled={!title.trim() || !description.trim()}
-          className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Optimize
-        </button>
+          {/* Error */}
+
+          {error && (
+
+            <div className="mt-4 bg-red-50 border border-red-300 rounded-lg p-3">
+
+              <p className="text-red-600 text-sm">
+                {error}
+              </p>
+
+            </div>
+
+          )}
+
+          <Button
+            className="mt-6 h-12 w-full md:w-auto"
+            onClick={handleOptimize}
+            disabled={loading}
+          >
+            Optimize Gig
+          </Button>
+
+        </Card>
+
+        {/* Loading */}
 
         {loading && (
-          <div className="mt-10 text-center">
-            <Spinner />
 
-            <p className="mt-4 text-blue-700 font-semibold">
-              Optimizing your gig...
-            </p>
+          <div className="space-y-6">
 
-            <p className="text-sm text-gray-500 mt-2">
-              AI is analyzing your title and description. Please wait a moment.
-            </p>
+            <Skeleton className="h-32" />
+
+            <Skeleton className="h-72" />
+
           </div>
+
         )}
+                {/* Result */}
 
         {!loading && result && (
-          <Card className="mt-8">
-            <h2 className="text-2xl font-bold mb-6">
-              Optimized Version
-            </h2>
 
-            <p>
-              <strong>Optimized Title:</strong>
-            </p>
+          <div className="space-y-6">
 
-            <p className="mt-2 text-gray-700">
-              {result.title}
-            </p>
+            {/* SEO Score */}
 
-            <p className="mt-6">
-              <strong>Optimized Description:</strong>
-            </p>
+            <Card className="shadow-lg">
 
-            <p className="mt-2 text-gray-700">
-              {result.description}
-            </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                SEO Score
+              </h2>
 
-            <div className="mt-6">
-              <strong>Recommended Keywords</strong>
+              {/* Title */}
 
-              <div className="flex flex-wrap gap-3 mt-3">
-                {result.keywords.map((keyword) => (
-                  <span
-                    key={keyword}
-                    className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full"
-                  >
-                    {keyword}
+              <div className="mb-5">
+
+                <div className="flex justify-between mb-2">
+                  <span className="font-medium text-gray-700">
+                    Title
                   </span>
-                ))}
+
+                  <span className="text-blue-600 font-semibold">
+                    90%
+                  </span>
+                </div>
+
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-blue-600 h-3 rounded-full"
+                    style={{ width: "90%" }}
+                  />
+                </div>
+
               </div>
+
+              {/* Tags */}
+
+              <div className="mb-5">
+
+                <div className="flex justify-between mb-2">
+                  <span className="font-medium text-gray-700">
+                    Tags
+                  </span>
+
+                  <span className="text-green-600 font-semibold">
+                    85%
+                  </span>
+                </div>
+
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-green-600 h-3 rounded-full"
+                    style={{ width: "85%" }}
+                  />
+                </div>
+
+              </div>
+
+              {/* Description */}
+
+              <div>
+
+                <div className="flex justify-between mb-2">
+                  <span className="font-medium text-gray-700">
+                    Description
+                  </span>
+
+                  <span className="text-purple-600 font-semibold">
+                    92%
+                  </span>
+                </div>
+
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-purple-600 h-3 rounded-full"
+                    style={{ width: "92%" }}
+                  />
+                </div>
+
+              </div>
+
+            </Card>
+
+            {/* Optimized Title */}
+
+            <Card className="shadow-lg">
+
+              <div className="flex justify-between items-center">
+
+                <h2 className="text-xl font-bold text-gray-900">
+                  Optimized Title
+                </h2>
+
+                <Button
+                  onClick={() => copyText(result.title)}
+                >
+                  Copy
+                </Button>
+
+              </div>
+
+              <p className="mt-4 text-gray-700">
+                {result.title}
+              </p>
+
+            </Card>
+
+            {/* Description */}
+
+            <Card className="shadow-lg">
+
+              <div className="flex justify-between items-center">
+
+                <h2 className="text-xl font-bold text-gray-900">
+                  Optimized Description
+                </h2>
+
+                <Button
+                  onClick={() =>
+                    copyText(result.description)
+                  }
+                >
+                  Copy
+                </Button>
+
+              </div>
+
+              <p className="mt-4 text-gray-700 leading-7">
+                {result.description}
+              </p>
+
+            </Card>
+
+            {/* SEO Tags */}
+
+            <Card className="shadow-lg">
+
+              <div className="flex justify-between items-center">
+
+                <h2 className="text-xl font-bold text-gray-900">
+                  SEO Tags
+                </h2>
+
+                <Button
+                  onClick={() =>
+                    copyText(result.keywords.join(", "))
+                  }
+                >
+                  Copy
+                </Button>
+
+              </div>
+
+              <div className="flex flex-wrap gap-3 mt-5">
+
+                {result.keywords.map((tag, index) => (
+
+                  <span
+                    key={index}
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${
+                      tag.length > 15
+                        ? "bg-red-100 text-red-700"
+                        : "bg-green-100 text-green-700"
+                    }`}
+                  >
+                    {tag}
+                  </span>
+
+                ))}
+
+              </div>
+
+            </Card>
+
+            {/* Regenerate */}
+
+            <div className="flex justify-end">
+
+              <Button
+                className="h-12"
+                onClick={handleOptimize}
+              >
+                Regenerate
+              </Button>
+
             </div>
-          </Card>
+
+          </div>
+
         )}
+
       </div>
 
-      {toastMessage && (
-        <Toast
-          message={toastMessage}
-          type={toastType}
-          onClose={() => setToastMessage("")}
-        />
-      )}
+      <Toast
+        message={toastMessage}
+        type={toastType}
+        onClose={() => setToastMessage("")}
+      />
+
     </div>
   );
 }

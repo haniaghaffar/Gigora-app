@@ -7,6 +7,7 @@ import Dashboard from "../pages/Dashboard";
 import ProfileAnalyzer from "../pages/ProfileAnalyzer";
 import GigSEO from "../pages/GigSEO";
 import ProposalGenerator from "../pages/ProposalGenerator";
+import History from "../pages/History";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -18,21 +19,19 @@ const AppRoutes = () => (
     {/* Landing */}
     <Route path="/" element={<Landing />} />
 
-
     {/* Login & Signup - only for guests */}
     <Route element={<PublicRoute />}>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
     </Route>
 
-
     {/* Dashboard - only for logged in users */}
     <Route element={<ProtectedRoute />}>
       <Route element={<DashboardLayout />}>
 
-        <Route 
-          path="/dashboard" 
-          element={<Dashboard />} 
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
         />
 
         <Route
@@ -50,9 +49,13 @@ const AppRoutes = () => (
           element={<ProposalGenerator />}
         />
 
+        <Route
+          path="/dashboard/history"
+          element={<History />}
+        />
+
       </Route>
     </Route>
-
 
     {/* Unknown routes */}
     <Route path="*" element={<Navigate to="/" replace />} />

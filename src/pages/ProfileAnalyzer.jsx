@@ -1,131 +1,252 @@
 import { useState } from "react";
 import Card from "../components/Card";
-import Spinner from "../components/Spinner";
+import Button from "../components/Button";
+import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
 
 function ProfileAnalyzer() {
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("info");
   const [profile, setProfile] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
+
   const [result, setResult] = useState(null);
 
   const handleAnalyze = () => {
-    if (!profile.trim()) return;
+    if (!profile.trim()) {
+      setError("Profile description cannot be empty.");
+      return;
+    }
 
+    setError("");
     setLoading(true);
 
-    // Dummy AI response (replace with fetch later)
+    // Dummy API response
     setTimeout(() => {
       setResult({
-        score: "8/10",
+        score: 8,
+
         strengths: [
           "Strong technical skills",
           "Clear profile introduction",
+          "Good communication style",
         ],
+
         weaknesses: [
           "Portfolio link is missing",
           "Experience section can be improved",
         ],
+
         suggestions: [
-          "Add your best projects",
-          "Use more keywords related to your skills",
+          "Add your best projects.",
+          "Use more SEO keywords.",
+          "Show measurable achievements.",
         ],
       });
 
       setLoading(false);
-      setToastMessage("Profile analysis complete");
+
       setToastType("success");
+      setToastMessage("Profile analyzed successfully.");
     }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-blue-700">
-          Profile Analyzer
-        </h1>
+    <div className="min-h-screen bg-gray-50 p-6 md:p-8">
 
-        <p className="mt-3 text-gray-600">
-          Paste your Fiverr/Upwork profile URL or describe your skills,
-          experience, projects, and services to receive AI-powered feedback.
-        </p>
+      <div className="max-w-6xl mx-auto space-y-8">
 
-        <textarea
-          value={profile}
-          onChange={(e) => setProfile(e.target.value)}
-          placeholder="Paste your Fiverr/Upwork profile URL or describe your profile..."
-          className="w-full mt-6 p-4 border rounded-lg h-40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        {/* Header */}
 
-        {profile.trim() === "" && (
-          <p className="text-red-500 mt-2 text-sm">
-            Profile description cannot be empty.
+        <div>
+
+          <h1 className="text-4xl font-bold text-gray-900">
+            AI Profile Analyzer
+          </h1>
+
+          <p className="mt-3 text-gray-600 max-w-3xl">
+            Paste your freelancer profile description and let AI analyze
+            your strengths, weaknesses, profile score and improvement
+            suggestions.
           </p>
-        )}
 
-        <button
-          onClick={handleAnalyze}
-          disabled={profile.trim() === ""}
-          className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Analyze Profile
-        </button>
+        </div>
+
+        {/* Input */}
+
+        <Card className="shadow-lg">
+
+          <h2 className="text-xl font-bold text-gray-900 mb-4">
+            Profile Information
+          </h2>
+
+          <textarea
+            value={profile}
+            onChange={(e) => setProfile(e.target.value)}
+            placeholder="Paste your Fiverr / Upwork profile or describe your skills, experience and services..."
+            className="w-full h-44 rounded-xl border border-gray-300 p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
+          />
+
+          {error && (
+            <div className="mt-4 rounded-lg border border-red-300 bg-red-50 p-3">
+
+              <p className="text-red-600 text-sm font-medium">
+                {error}
+              </p>
+
+            </div>
+          )}
+
+          <Button
+            className="mt-6 h-12 w-full md:w-auto"
+            onClick={handleAnalyze}
+            disabled={loading}
+          >
+            Analyze Profile
+          </Button>
+
+        </Card>
+
+        {/* Loading */}
 
         {loading && (
-          <div className="mt-8 text-center">
-            <Spinner />
-            <p className="mt-3 text-blue-700 font-medium">
-              Analyzing profile...
-            </p>
+
+          <div className="space-y-6">
+
+            <Skeleton className="h-32" />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              <Skeleton className="h-56" />
+              <Skeleton className="h-56" />
+              <Skeleton className="h-56" />
+              <Skeleton className="h-56" />
+
+            </div>
+
           </div>
+
         )}
+                {/* Results */}
 
         {!loading && result && (
-          <div className="grid md:grid-cols-2 gap-6 mt-10">
-            <Card>
-              <h2 className="text-xl font-bold text-gray-800">
-                ⭐ Score
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* Score */}
+
+            <Card className="shadow-lg">
+
+              <h2 className="text-xl font-bold text-gray-900">
+                ⭐ Profile Score
               </h2>
-              <p className="text-3xl font-bold mt-3">
-                {result.score}
-              </p>
+
+              <div className="mt-5 flex items-center gap-4">
+
+                <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center">
+
+                  <span className="text-3xl font-bold text-blue-700">
+                    {result.score}
+                  </span>
+
+                </div>
+
+                <div>
+
+                  <p className="text-gray-700 font-semibold">
+                    Excellent Profile
+                  </p>
+
+                  <p className="text-sm text-gray-500 mt-1">
+                    Your profile is performing well but still has room for improvement.
+                  </p>
+
+                </div>
+
+              </div>
+
             </Card>
 
-            <Card>
-              <h2 className="text-xl font-bold text-gray-800">
+            {/* Good */}
+
+            <Card className="shadow-lg">
+
+              <h2 className="text-xl font-bold text-green-700 mb-4">
                 ✅ What is Good
               </h2>
-              <ul className="list-disc ml-5 mt-3 space-y-2">
+
+              <ul className="space-y-3">
+
                 {result.strengths.map((item, index) => (
-                  <li key={index}>{item}</li>
+
+                  <li
+                    key={index}
+                    className="bg-green-50 border border-green-200 rounded-lg p-3 text-gray-700"
+                  >
+                    {item}
+                  </li>
+
                 ))}
+
               </ul>
+
             </Card>
 
-            <Card>
-              <h2 className="text-xl font-bold text-gray-800">
+            {/* Improve */}
+
+            <Card className="shadow-lg">
+
+              <h2 className="text-xl font-bold text-red-600 mb-4">
                 ❌ What to Improve
               </h2>
-              <ul className="list-disc ml-5 mt-3 space-y-2">
+
+              <ul className="space-y-3">
+
                 {result.weaknesses.map((item, index) => (
-                  <li key={index}>{item}</li>
+
+                  <li
+                    key={index}
+                    className="bg-red-50 border border-red-200 rounded-lg p-3 text-gray-700"
+                  >
+                    {item}
+                  </li>
+
                 ))}
+
               </ul>
+
             </Card>
 
-            <Card>
-              <h2 className="text-xl font-bold text-gray-800">
-                💡 Suggestions
+            {/* Suggestions */}
+
+            <Card className="shadow-lg">
+
+              <h2 className="text-xl font-bold text-blue-700 mb-4">
+                💡 AI Suggestions
               </h2>
-              <ul className="list-disc ml-5 mt-3 space-y-2">
+
+              <ul className="space-y-3">
+
                 {result.suggestions.map((item, index) => (
-                  <li key={index}>{item}</li>
+
+                  <li
+                    key={index}
+                    className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-gray-700"
+                  >
+                    {item}
+                  </li>
+
                 ))}
+
               </ul>
+
             </Card>
+
           </div>
+
         )}
+
       </div>
 
       <Toast
@@ -133,6 +254,7 @@ function ProfileAnalyzer() {
         type={toastType}
         onClose={() => setToastMessage("")}
       />
+
     </div>
   );
 }
