@@ -280,23 +280,21 @@ Best Regards.`,
 
 
           <textarea
-
-            value={jobPost}
-
-            onChange={(e)=>
-              setJobPost(e.target.value)
-            }
-
-            placeholder="Paste job description here..."
-
-            className="
-            w-full h-44 border rounded-xl p-4
-            resize-none
-            focus:outline-none
-            focus:ring-2 focus:ring-blue-600
-            "
-
-          />
+  value={jobPost}
+  onChange={(e) => setJobPost(e.target.value)}
+  placeholder="Paste job description here..."
+  className="
+  w-full h-44 
+  border border-gray-300
+  rounded-xl p-4
+  bg-white
+  !text-black
+  placeholder-gray-400
+  resize-none
+  focus:outline-none
+  focus:ring-2 focus:ring-blue-600
+  "
+/>
 
 
 
@@ -382,20 +380,17 @@ Best Regards.`,
 
 
 
-            <select
-
-              value={skill}
-
-              onChange={(e)=>
-                setSkill(e.target.value)
-              }
-
-
-              className="
-              w-full mt-2 border rounded-lg p-3
-              "
-
-            >
+          <select
+  value={skill}
+  onChange={(e) => setSkill(e.target.value)}
+  className="
+  w-full mt-2
+  border border-gray-300
+  rounded-lg p-3
+  bg-white
+  !text-black
+  "
+>
 
               <option value="">
                 Choose skill

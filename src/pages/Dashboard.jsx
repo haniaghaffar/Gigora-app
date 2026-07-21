@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 import {
   LineChart,
   Line,
@@ -14,14 +16,16 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import Skeleton from "../components/Skeleton";
+
 import {
- UserRoundSearch,
- SearchCheck,
- FilePenLine,
+  UserRoundSearch,
+  SearchCheck,
+  FilePenLine,
 } from "lucide-react";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -62,27 +66,26 @@ function Dashboard() {
     { day: "Sat", score: 90 },
   ];
 
-
-const features = [
-  {
-    title: "Profile Analyzer",
-    description: "Analyze your freelancer profile with AI.",
-    route: "/dashboard/profile-analyzer",
-    icon: UserRoundSearch,
-  },
-  {
-    title: "Gig SEO",
-    description: "Optimize your gig title and description.",
-    route: "/dashboard/gig-seo",
-    icon: SearchCheck,
-  },
-  {
-    title: "Proposal Generator",
-    description: "Generate winning proposals in seconds.",
-    route: "/dashboard/proposal-generator",
-    icon: FilePenLine,
-  },
-];
+  const features = [
+    {
+      title: "Profile Analyzer",
+      description: "Analyze your freelancer profile with AI.",
+      route: "/dashboard/profile-analyzer",
+      icon: UserRoundSearch,
+    },
+    {
+      title: "Gig SEO",
+      description: "Optimize your gig title and description.",
+      route: "/dashboard/gig-seo",
+      icon: SearchCheck,
+    },
+    {
+      title: "Proposal Generator",
+      description: "Generate winning proposals in seconds.",
+      route: "/dashboard/proposal-generator",
+      icon: FilePenLine,
+    },
+  ];
 
   const recentHistory = [
     {
@@ -103,16 +106,44 @@ const features = [
     <div className="p-6 md:p-8 space-y-8">
 
       {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
 
-      <div>
-        <h1 className="text-4xl font-bold text-gray-900">
-          Welcome back, Freelancer 👋
-        </h1>
+        {/* Left */}
+        <div>
+          <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-primaryBlue text-sm font-semibold">
+            AI Dashboard
+          </span>
 
-        <p className="mt-3 text-gray-600 max-w-2xl">
-          Manage your AI tools, optimize gigs, and improve your chances
-          of winning freelance projects.
-        </p>
+          <h1 className="mt-4 text-4xl font-bold text-gray-900">
+            Welcome back, {user?.user_metadata?.name || "Freelancer"} 👋
+          </h1>
+
+          <p className="mt-3 text-gray-600 max-w-2xl leading-relaxed">
+            Here's an overview of your AI-powered tools, profile
+            performance, recent activity, and productivity.
+            Keep optimizing your gigs and proposals to win
+            more freelance projects.
+          </p>
+        </div>
+
+        {/* Right Card */}
+        <Card className="w-full lg:w-80 bg-gradient-to-r from-primaryBlue to-blue-700 text-white border-0 shadow-xl">
+          <div className="space-y-3">
+            <p className="text-blue-100 text-sm">
+              Today's Goal
+            </p>
+
+            <h3 className="text-2xl font-bold">
+              Complete 5 AI Tasks 🚀
+            </h3>
+
+            <p className="text-sm text-blue-100">
+              Stay consistent and improve your freelancing
+              profile every day.
+            </p>
+          </div>
+        </Card>
+
       </div>
 
       {loading ? (
@@ -135,29 +166,37 @@ const features = [
         </div>
       ) : (
         <>
+                  {/* Usage Banner */}
 
-          {/* Usage Banner */}
-
-          <Card className="border border-blue-200 p-5">
-
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <Card className="border-0 bg-gradient-to-r from-primaryBlue to-blue-700 text-white shadow-xl">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
 
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">
+                <p className="text-blue-100 text-sm font-medium">
                   Daily Usage
+                </p>
+
+                <h2 className="text-2xl font-bold mt-2">
+                  3 of 5 Free AI Requests Used
                 </h2>
 
-                <p className="text-gray-600">
-                  3 of 5 free uses remaining today
+                <p className="text-blue-100 mt-2">
+                  You have <span className="font-semibold">2 free AI requests</span> remaining today.
                 </p>
+
+                {/* Progress Bar */}
+                <div className="mt-5 w-full max-w-md h-3 rounded-full bg-blue-300/40 overflow-hidden">
+                  <div className="h-full w-3/5 bg-white rounded-full"></div>
+                </div>
               </div>
 
-              <Button>
-                Upgrade to Pro
-              </Button>
+             <Button
+  className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:from-blue-700 hover:to-cyan-600 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+>
+  Upgrade to Pro
+</Button>
 
             </div>
-
           </Card>
 
           {/* Stats */}
@@ -165,129 +204,190 @@ const features = [
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             {stats.map((item) => (
-
               <Card
                 key={item.title}
-                className="shadow-md hover:shadow-xl transition"
+                className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
 
-                <p className="text-gray-500">
-                  {item.title}
-                </p>
+                <div className="flex items-center justify-between">
 
-                <h2 className="text-4xl font-bold text-primaryBlue mt-2">
-                  {item.value}
-                </h2>
+                  <div>
 
-                <p className="text-sm text-gray-500 mt-2">
-                  {item.description}
-                </p>
+                    <p className="text-sm text-gray-500">
+                      {item.title}
+                    </p>
+
+                    <h2 className="mt-2 text-4xl font-bold text-gray-900">
+                      {item.value}
+                    </h2>
+
+                    <p className="mt-2 text-sm text-gray-500">
+                      {item.description}
+                    </p>
+
+                  </div>
+
+                  <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center group-hover:bg-primaryBlue transition">
+
+                    {item.title === "Profile Score" && (
+                      <UserRoundSearch
+                        size={28}
+                        className="text-primaryBlue group-hover:text-white"
+                      />
+                    )}
+
+                    {item.title === "Total SEO" && (
+                      <SearchCheck
+                        size={28}
+                        className="text-primaryBlue group-hover:text-white"
+                      />
+                    )}
+
+                    {item.title === "Total Proposals" && (
+                      <FilePenLine
+                        size={28}
+                        className="text-primaryBlue group-hover:text-white"
+                      />
+                    )}
+
+                  </div>
+
+                </div>
+
+                <div className="mt-6 flex items-center justify-between border-t pt-4">
+
+                  <span className="text-green-600 text-sm font-semibold">
+                    ▲ +12% this week
+                  </span>
+
+                  <button className="text-primaryBlue text-sm font-semibold hover:underline">
+                    View Details
+                  </button>
+
+                </div>
 
               </Card>
-
             ))}
 
           </div>
 
-          {/* Growth Chart */}
+          {/* Profile Growth Chart */}
 
-          <Card className="shadow-md">
+          <Card className="shadow-lg rounded-2xl">
 
-            <h2 className="text-xl font-bold text-gray-800 mb-6">
-              Profile Growth Score
-            </h2>
+            <div className="flex items-center justify-between mb-6">
 
-            <ResponsiveContainer
-              width="100%"
-              height={300}
-            >
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Profile Growth
+                </h2>
 
+                <p className="text-gray-500 text-sm mt-1">
+                  Your AI profile score over the last 6 days.
+                </p>
+              </div>
+
+              <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                +12%
+              </span>
+
+            </div>
+
+            <ResponsiveContainer width="100%" height={320}>
               <LineChart data={chartData}>
-
                 <CartesianGrid strokeDasharray="3 3" />
-
                 <XAxis dataKey="day" />
-
                 <YAxis />
-
                 <Tooltip />
 
                 <Line
                   type="monotone"
                   dataKey="score"
                   stroke="#1A56DB"
-                  strokeWidth={3}
+                  strokeWidth={4}
+                  dot={{ r: 5 }}
+                  activeDot={{ r: 8 }}
                 />
-
               </LineChart>
-
             </ResponsiveContainer>
 
           </Card>
-                    {/* AI Tools */}
+                    {/* AI Workspace */}
 
-        <div>
-  {/* Heading */}
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-    <div>
-      <p className="text-primaryBlue font-semibold text-sm uppercase tracking-wide">
-        AI Workspace
-      </p>
+          <div>
 
-      <h2 className="text-3xl font-bold text-gray-900 mt-1">
-        AI Freelancer Tools
-      </h2>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
 
-      <p className="text-gray-500 mt-2">
-        Boost your freelancing workflow with powerful AI tools.
-      </p>
-    </div>
-  </div>
+              <div>
 
-  {/* Cards */}
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {features.map((feature) => {
-      const Icon = feature.icon;
+                <p className="text-primaryBlue font-semibold text-sm uppercase tracking-wide">
+                  AI Workspace
+                </p>
 
-      return (
-        <Card
-          key={feature.title}
-          className="group p-6 rounded-2xl border border-gray-200 hover:border-primaryBlue hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-        >
-          <div className="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center mb-5 group-hover:bg-primaryBlue transition">
-            <Icon
-              size={28}
-              className="text-primaryBlue group-hover:text-white"
-            />
+                <h2 className="text-3xl font-bold text-gray-900 mt-1">
+                  AI Freelancer Tools
+                </h2>
+
+                <p className="text-gray-500 mt-2">
+                  Choose an AI tool to analyze, optimize, or generate content
+                  for your freelance work.
+                </p>
+
+              </div>
+
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+              {features.map((feature) => {
+                const Icon = feature.icon;
+
+                return (
+                  <Card
+                    key={feature.title}
+                    className="group rounded-2xl border border-gray-200 p-6 hover:border-primaryBlue hover:shadow-xl hover:-translate-y-2 transition-all duration-300"
+                  >
+
+                    <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center mb-5 group-hover:bg-primaryBlue transition">
+
+                      <Icon
+                        size={28}
+                        className="text-primaryBlue group-hover:text-white"
+                      />
+
+                    </div>
+
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {feature.title}
+                    </h3>
+
+                    <p className="mt-3 text-gray-600 leading-relaxed">
+                      {feature.description}
+                    </p>
+
+                    <Button
+                      className="mt-6 w-full rounded-xl"
+                      onClick={() => navigate(feature.route)}
+                    >
+                      Open Tool
+                    </Button>
+
+                  </Card>
+                );
+              })}
+
+            </div>
+
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900">
-            {feature.title}
-          </h3>
-
-          <p className="mt-3 text-gray-600 leading-relaxed">
-            {feature.description}
-          </p>
-
-          <Button
-            className="mt-6 w-full h-11 rounded-xl"
-            onClick={() => navigate(feature.route)}
-          >
-            Open Tool
-          </Button>
-        </Card>
-      );
-    })}
-  </div>
-</div>
           {/* Recent History */}
 
-          <Card className="shadow-md">
+          <Card className="shadow-lg rounded-2xl">
 
             <div className="flex items-center justify-between mb-6">
 
-              <h2 className="text-xl font-bold text-gray-900">
-                Recent History
+              <h2 className="text-2xl font-bold text-gray-900">
+                Recent Activity
               </h2>
 
               <Button
@@ -304,12 +404,12 @@ const features = [
 
                 <div
                   key={index}
-                  className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-4"
+                  className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-5"
                 >
 
                   <div>
 
-                    <span className="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold mb-2">
+                    <span className="inline-flex px-3 py-1 rounded-full bg-blue-100 text-primaryBlue text-xs font-semibold mb-2">
                       {item.type}
                     </span>
 
@@ -320,6 +420,7 @@ const features = [
                   </div>
 
                   <Button
+                    className="mt-4 md:mt-0"
                     onClick={() => {
                       setSelectedHistory(item);
                       setOpen(true);
@@ -344,23 +445,24 @@ const features = [
               setOpen(false);
               setSelectedHistory(null);
             }}
-            title={selectedHistory?.type || "Recent Activity"}
+            title={selectedHistory?.type || "Activity Details"}
           >
 
-            <div className="space-y-4">
+            <div className="space-y-5">
 
-              <p className="text-gray-700">
+              <p className="text-gray-700 leading-relaxed">
                 {selectedHistory?.text}
               </p>
 
               <Button
+                className="w-full"
                 onClick={() =>
                   navigator.clipboard.writeText(
                     selectedHistory?.text || ""
                   )
                 }
               >
-                Copy
+                Copy to Clipboard
               </Button>
 
             </div>
