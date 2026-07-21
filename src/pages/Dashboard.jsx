@@ -14,6 +14,11 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import Skeleton from "../components/Skeleton";
+import {
+ UserRoundSearch,
+ SearchCheck,
+ FilePenLine,
+} from "lucide-react";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -57,26 +62,27 @@ function Dashboard() {
     { day: "Sat", score: 90 },
   ];
 
-  const features = [
-    {
-      title: "Profile Analyzer",
-      description:
-        "Get AI suggestions to improve your freelancer profile.",
-      route: "/dashboard/profile-analyzer",
-    },
-    {
-      title: "Gig SEO Optimizer",
-      description:
-        "Improve ranking with AI-powered keyword optimization.",
-      route: "/dashboard/gig-seo",
-    },
-    {
-      title: "Proposal Generator",
-      description:
-        "Create winning proposals in seconds using AI.",
-      route: "/dashboard/proposal-generator",
-    },
-  ];
+
+const features = [
+  {
+    title: "Profile Analyzer",
+    description: "Analyze your freelancer profile with AI.",
+    route: "/dashboard/profile-analyzer",
+    icon: UserRoundSearch,
+  },
+  {
+    title: "Gig SEO",
+    description: "Optimize your gig title and description.",
+    route: "/dashboard/gig-seo",
+    icon: SearchCheck,
+  },
+  {
+    title: "Proposal Generator",
+    description: "Generate winning proposals in seconds.",
+    route: "/dashboard/proposal-generator",
+    icon: FilePenLine,
+  },
+];
 
   const recentHistory = [
     {
@@ -220,52 +226,60 @@ function Dashboard() {
           </Card>
                     {/* AI Tools */}
 
-          <div>
+        <div>
+  {/* Heading */}
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+    <div>
+      <p className="text-primaryBlue font-semibold text-sm uppercase tracking-wide">
+        AI Workspace
+      </p>
 
-            <div className="flex items-center justify-between mb-6">
+      <h2 className="text-3xl font-bold text-gray-900 mt-1">
+        AI Freelancer Tools
+      </h2>
 
-              <h2 className="text-2xl font-bold text-gray-900">
-                AI Freelancer Tools
-              </h2>
+      <p className="text-gray-500 mt-2">
+        Boost your freelancing workflow with powerful AI tools.
+      </p>
+    </div>
+  </div>
 
-              <p className="text-sm text-gray-500">
-                Choose a tool to get started
-              </p>
+  {/* Cards */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {features.map((feature) => {
+      const Icon = feature.icon;
 
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-              {features.map((feature) => (
-
-                <Card
-                  key={feature.title}
-                  className="shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                >
-
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {feature.title}
-                  </h3>
-
-                  <p className="mt-3 text-gray-600">
-                    {feature.description}
-                  </p>
-
-                  <Button
-                    className="mt-6 w-full h-12"
-                    onClick={() => navigate(feature.route)}
-                  >
-                    Launch Tool
-                  </Button>
-
-                </Card>
-
-              ))}
-
-            </div>
-
+      return (
+        <Card
+          key={feature.title}
+          className="group p-6 rounded-2xl border border-gray-200 hover:border-primaryBlue hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+        >
+          <div className="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center mb-5 group-hover:bg-primaryBlue transition">
+            <Icon
+              size={28}
+              className="text-primaryBlue group-hover:text-white"
+            />
           </div>
 
+          <h3 className="text-xl font-bold text-gray-900">
+            {feature.title}
+          </h3>
+
+          <p className="mt-3 text-gray-600 leading-relaxed">
+            {feature.description}
+          </p>
+
+          <Button
+            className="mt-6 w-full h-11 rounded-xl"
+            onClick={() => navigate(feature.route)}
+          >
+            Open Tool
+          </Button>
+        </Card>
+      );
+    })}
+  </div>
+</div>
           {/* Recent History */}
 
           <Card className="shadow-md">

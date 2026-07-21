@@ -1,6 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, LayoutDashboard, LogOut, LogIn, UserPlus } from "lucide-react";
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  LogOut,
+  LogIn,
+  UserPlus,
+  Sparkles,
+  UserCircle2,
+} from "lucide-react";
 import Button from "../components/Button";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../services/supabase";
@@ -13,7 +22,7 @@ function Navbar() {
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
     if (section) {
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
+      section.scrollIntoView({ behavior: "smooth" });
     }
     setMenuOpen(false);
   };
@@ -27,92 +36,141 @@ function Navbar() {
   const isPro = user?.user_metadata?.plan?.toLowerCase() === "pro";
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="text-2xl font-bold tracking-wide text-primaryBlue">
-          GIGORA
-        </Link>
+    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
-        {/* Mobile Button */}
-        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-gray-700">
-          <Menu size={28} />
-        </button>
+        {/* Logo */}
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-2xl font-extrabold text-primaryBlue"
+        >
+          <Sparkles className="text-yellow-400" size={26} />
+          Gigora
+        </Link>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
-          <button onClick={() => scrollToSection("features")} className="text-gray-700 hover:text-primaryBlue transition">
+
+          <button
+            onClick={() => scrollToSection("features")}
+            className="text-gray-600 hover:text-primaryBlue font-medium"
+          >
             Features
           </button>
-          <button onClick={() => scrollToSection("pricing")} className="text-gray-700 hover:text-primaryBlue transition">
+
+          <button
+            onClick={() => scrollToSection("pricing")}
+            className="text-gray-600 hover:text-primaryBlue font-medium"
+          >
             Pricing
           </button>
+
           {user ? (
             <>
-              <Link to="/dashboard" className="flex items-center gap-2 text-gray-700 hover:text-primaryBlue transition">
-                <LayoutDashboard size={18} />
+              <Link
+                to="/dashboard"
+                className="px-4 py-2 rounded-full bg-blue-50 text-primaryBlue font-semibold hover:bg-primaryBlue hover:text-white transition"
+              >
                 Dashboard
               </Link>
-              {/* Username with PRO badge */}
+
               <div className="flex items-center gap-2">
-                <span className="text-gray-800">{user.user_metadata?.full_name || user.email}</span>
-                {isPro && (
-                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
-                    PRO
-                  </span>
-                )}
+                <UserCircle2 className="text-primaryBlue" size={34} />
+
+                <div className="leading-tight">
+                  <p className="font-semibold text-sm">
+                    {user.user_metadata?.name || "Freelancer"}
+                  </p>
+
+                  {isPro && (
+                    <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full">
+                      PRO
+                    </span>
+                  )}
+                </div>
               </div>
-              <button onClick={handleLogout} className="flex items-center gap-2 text-red-500 hover:text-red-600 transition">
-                <LogOut size={18} />
+
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition"
+              >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="flex items-center gap-2 text-gray-700 hover:text-primaryBlue transition">
-                <LogIn size={18} />
+              <Link
+                to="/login"
+                className="font-medium text-gray-600 hover:text-primaryBlue"
+              >
                 Login
               </Link>
+
               <Link to="/signup">
-                <Button className="flex items-center gap-2">
-                  <UserPlus size={18} />
+                <Button className="rounded-full px-6">
                   Get Started
                 </Button>
               </Link>
             </>
           )}
         </div>
+
+        {/* Mobile */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden"
+        >
+          {menuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
 
-      {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t px-6 py-4 space-y-4">
-          <button onClick={() => scrollToSection("features")} className="block text-gray-700">
+        <div className="md:hidden bg-white border-t p-6 space-y-4">
+
+          <button
+            onClick={() => scrollToSection("features")}
+            className="block"
+          >
             Features
           </button>
-          <button onClick={() => scrollToSection("pricing")} className="block text-gray-700">
+
+          <button
+            onClick={() => scrollToSection("pricing")}
+            className="block"
+          >
             Pricing
           </button>
+
           {user ? (
             <>
-              <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-gray-700">
-                <LayoutDashboard size={18} />
+              <Link
+                to="/dashboard"
+                onClick={() => setMenuOpen(false)}
+              >
                 Dashboard
               </Link>
-              <button onClick={handleLogout} className="flex items-center gap-2 text-red-500">
-                <LogOut size={18} />
+
+              <button
+                onClick={handleLogout}
+                className="text-red-500"
+              >
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-gray-700">
-                <LogIn size={18} />
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+              >
                 Login
               </Link>
-              <Link to="/signup" onClick={() => setMenuOpen(false)}>
-                <Button className="w-full flex items-center justify-center gap-2">
-                  <UserPlus size={18} />
+
+              <Link
+                to="/signup"
+                onClick={() => setMenuOpen(false)}
+              >
+                <Button className="w-full">
                   Get Started
                 </Button>
               </Link>
