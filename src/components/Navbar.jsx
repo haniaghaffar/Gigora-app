@@ -3,10 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
-  LayoutDashboard,
-  LogOut,
-  LogIn,
-  UserPlus,
+ 
   Sparkles,
   UserCircle2,
 } from "lucide-react";
