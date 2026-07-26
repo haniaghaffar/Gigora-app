@@ -1,9 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
 import { generateProposal } from "../services/api";
+import ComparisonTable from "../components/ComparisonTable";
 
 function ProposalGenerator() {
   const [jobPost, setJobPost] = useState("");
@@ -81,100 +82,71 @@ function ProposalGenerator() {
 
   const copyProposal = async () => {
     if (!proposal) return;
-
     await navigator.clipboard.writeText(proposal.proposal);
-
     showToast("Proposal copied!", "success");
   };
 
   const downloadProposal = () => {
     if (!proposal) return;
-
-    const blob = new Blob([proposal.proposal], {
-      type: "text/plain",
-    });
-
+    const blob = new Blob([proposal.proposal], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-
     const link = document.createElement("a");
     link.href = url;
     link.download = "Gigora_Proposal.txt";
     link.click();
-
     URL.revokeObjectURL(url);
-
     showToast("Proposal downloaded!", "success");
   };
+
+  // Sample data for comparison table
+  const sampleProposals = [
+    { model: "GPT-4", score: 92, speed: "Fast" },
+    { model: "Claude", score: 88, speed: "Medium" },
+    { model: "Gemini", score: 90, speed: "Fast" },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
-
         {/* Header */}
-
         <div>
-          <h1 className="text-4xl font-bold text-gray-900">
-            Proposal Generator
-          </h1>
-
-          <p className="mt-3 text-gray-600">
-            Generate AI powered proposals customized for freelance projects.
-          </p>
+          <h1 className="text-4xl font-bold text-gray-900">Proposal Generator</h1>
+          <p className="mt-3 text-gray-600">Generate AI powered proposals customized for freelance projects.</p>
         </div>
-
         {/* Form */}
-
         <Card className="shadow-lg">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">
-            Project Details
-          </h2>
-
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Project Details</h2>
           <textarea
             value={jobPost}
             onChange={(e) => setJobPost(e.target.value)}
             placeholder="Paste job description here..."
             className="w-full h-44 border border-gray-300 rounded-xl p-4 bg-white text-black placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
-
           {/* Tone */}
-
           <div className="mt-6">
-            <label className="font-medium text-gray-700">
-              Proposal Tone
-            </label>
-
+            <label className="font-medium text-gray-700">Proposal Tone</label>
             <div className="flex flex-wrap gap-3 mt-3">
               {["Professional", "Friendly", "Confident"].map((item) => (
                 <button
                   key={item}
                   type="button"
                   onClick={() => setTone(item)}
-                  className={`px-4 py-2 rounded-full border transition ${
-                    tone === item
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-gray-700"
-                  }`}
+                  className={`px-4 py-2 rounded-full border transition ${tone === item ? "bg-blue-600 text-white" : "bg-white text-gray-700"}`}
                 >
                   {item}
                 </button>
               ))}
             </div>
           </div>
-
           {/* Skill */}
-
           <div className="mt-6">
-            <label className="font-medium text-gray-700">
-              Select Skill
-            </label>
-
+            <label className="font-medium text-gray-700">Select Skill</label>
             <select
               value={skill}
               onChange={(e) => setSkill(e.target.value)}
               className="w-full mt-2 border border-gray-300 rounded-lg p-3 bg-white text-black"
             >
               <option value="">Choose skill</option>
-
               {skills.map((item) => (
                 <option key={item} value={item}>
                   {item}
@@ -182,37 +154,27 @@ function ProposalGenerator() {
               ))}
             </select>
           </div>
-
           {/* Platform */}
-                    <div className="mt-6">
-            <label className="font-medium text-gray-700">
-              Platform
-            </label>
-
+          <div className="mt-6">
+            <label className="font-medium text-gray-700">Platform</label>
             <div className="flex gap-3 mt-3">
               {["Fiverr", "Upwork"].map((item) => (
                 <button
                   key={item}
                   type="button"
                   onClick={() => setPlatform(item)}
-                  className={`px-5 py-2 rounded-lg border transition ${
-                    platform === item
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-white text-gray-700"
-                  }`}
+                  className={`px-5 py-2 rounded-lg border transition ${platform === item ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-700"}`}
                 >
                   {item}
                 </button>
               ))}
             </div>
           </div>
-
           {error && (
             <div className="mt-5 p-4 rounded-lg bg-red-50 border border-red-300">
               <p className="text-red-600">{error}</p>
             </div>
           )}
-
           <Button
             className="mt-6 h-12 w-full md:w-auto"
             onClick={generateAIProposal}
@@ -221,7 +183,6 @@ function ProposalGenerator() {
             {loading ? "Generating..." : "Generate Proposal"}
           </Button>
         </Card>
-
         {/* Loading */}
         {loading && (
           <div className="space-y-6">
@@ -229,64 +190,37 @@ function ProposalGenerator() {
             <Skeleton className="h-64" />
           </div>
         )}
-
         {/* Result */}
         {!loading && proposal && (
           <Card className="shadow-lg">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <h2 className="text-2xl font-bold text-gray-900">
-                Generated Proposal
-              </h2>
-
+              <h2 className="text-2xl font-bold text-gray-900">Generated Proposal</h2>
               <div className="flex flex-wrap gap-3">
-                <Button onClick={copyProposal}>
-                  Copy
-                </Button>
-
-                <Button onClick={downloadProposal}>
-                  Download .txt
-                </Button>
+                <Button onClick={copyProposal}>Copy</Button>
+                <Button onClick={downloadProposal}>Download .txt</Button>
               </div>
             </div>
-
-            <p className="mt-6 whitespace-pre-line text-gray-700 leading-7">
-              {proposal.proposal}
-            </p>
-
+            <p className="mt-6 whitespace-pre-line text-gray-700 leading-7">{proposal.proposal}</p>
             <div className="mt-8">
-              <h3 className="font-bold text-gray-900">
-                Extracted Key Points
-              </h3>
-
+              <h3 className="font-bold text-gray-900">Extracted Key Points</h3>
               <div className="flex flex-wrap gap-3 mt-4">
                 {proposal.keyPoints?.map((point, index) => (
-                  <span
-                    key={index}
-                    className="px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium"
-                  >
+                  <span key={index} className="px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium">
                     {point}
                   </span>
                 ))}
               </div>
             </div>
-
             <div className="mt-8 flex justify-end">
-              <Button
-                className="h-12"
-                onClick={generateAIProposal}
-                disabled={loading}
-              >
+              <Button className="h-12" onClick={generateAIProposal} disabled={loading}>
                 {loading ? "Generating..." : "Regenerate"}
               </Button>
             </div>
           </Card>
         )}
-
-        <Toast
-          message={toastMessage}
-          type={toastType}
-          onClose={() => setToastMessage("")}
-        />
+        {/* Comparison Table */}
+        <ComparisonTable proposals={sampleProposals} />
+        <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage("")} />
       </div>
     </div>
   );

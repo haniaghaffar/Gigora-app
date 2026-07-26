@@ -9,32 +9,23 @@ export default function Button({
   variant = "primary",
   ...rest
 }) {
-  const baseClasses =
-    "inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed";
+  // Base button styles: height 9 (2.25rem), horizontal padding 5 (1.25rem), rounded-lg (0.5rem), font-medium, transition
+  const baseClasses = "inline-flex items-center justify-center h-9 px-5 rounded-lg font-medium text-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variants = {
-    primary:
-      "bg-primaryBlue text-white hover:bg-blue-700 shadow-md",
-
-    secondary:
-      "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-primaryBlue",
-
-    success:
-      "bg-green-600 text-white hover:bg-green-700 shadow-md",
-
-    danger:
-      "bg-red-500 text-white hover:bg-red-600 shadow-md",
-
-    outline:
-      "border-2 border-primaryBlue text-primaryBlue bg-transparent hover:bg-primaryBlue hover:text-white",
+    primary: "bg-primaryBlue text-white hover:bg-primaryBlue/90",
+    secondary: "bg-white text-primaryBlue border border-primaryBlue hover:bg-primaryBlue/10",
+    // Additional variants can be added later if needed
   };
+
+  const variantClasses = variants[variant] || variants["primary"];
 
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClasses} ${variants[variant]} ${className}`}
+      className={`${baseClasses} ${variantClasses} ${className}`}
       {...rest}
     >
       {children}

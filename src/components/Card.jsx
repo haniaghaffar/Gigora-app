@@ -5,16 +5,16 @@ export default function Card({ children, className = "" }) {
     <div
       className={`
         relative overflow-hidden
-        rounded-2xl
-        border border-white/10
-        bg-white/5
-        backdrop-blur-xl
+        rounded-lg
+        border border-graySub/20
+        bg-white/10
+        backdrop-blur-lg
         p-6
-        shadow-xl
+        shadow-sm
         transition-all duration-300
         hover:-translate-y-1
-        hover:border-blue-400/40
-        hover:shadow-blue-500/20
+        hover:border-primaryBlue/40
+        hover:shadow-primaryBlue/20
         ${className}
       `}
     >

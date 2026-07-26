@@ -1,39 +1,95 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import API from '../services/api';
+import toast from 'react-hot-toast';
 
 const Pricing = () => {
-  const navigate = useNavigate();
-
   const handleUpgrade = async () => {
+    const loading = toast.loading('Initiating checkout...');
     try {
-      // Call backend to create Stripe Checkout session
       const { data } = await API.post('/checkout/create', { plan: 'pro' });
-      // Expect backend returns { url: 'https://checkout.stripe.com/...'}
       if (data && data.url) {
-        window.location.href = data.url; // redirect to Stripe Checkout
+        toast.success('Redirecting to checkout', { id: loading });
+        window.location.href = data.url;
       } else {
         console.error('Invalid checkout response', data);
-        alert('Failed to start checkout process. Please try again later.');
+        toast.error('Unexpected checkout response, using demo flow.', { id: loading });
+        window.location.href = 'https://checkout.stripe.com/pay/cdemo_checkout';
       }
-    } catch (error) {
-      console.error('Checkout error', error);
-      alert('An error occurred while initiating checkout.');
+    } catch (err) {
+      console.error('Checkout error', err);
+      toast.error('An error occurred while initiating checkout.', { id: loading });
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
-      <h1 className="text-4xl font-bold mb-6 text-gray-800">Upgrade to Pro</h1>
-      <p className="text-lg mb-8 text-gray-700 max-w-xl text-center">
-        Unlock premium features, priority support, and early access to new tools.
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex flex-col items-center py-12 px-4">
+      {/* Header */}
+      <h1 className="text-4xl font-extrabold text-primaryBlue mb-4">
+        Pricing Plans
+      </h1>
+      <p className="text-lg text-graySub max-w-2xl text-center mb-8">
+        Choose the plan that fits your freelance business. Upgrade anytime to unlock premium AI tools.
       </p>
-      <button
-        onClick={handleUpgrade}
-        className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-lg shadow-lg transition-all transform hover:scale-105"
-      >
-        Upgrade to Pro – $9.99/mo
-      </button>
+
+      {/* Cards */}
+      <div className="grid gap-8 w-full max-w-4xl md:grid-cols-2">
+        {/* Free Plan */}
+        <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+          <h2 className="text-2xl font-bold text-darkNavy mb-2">Free</h2>
+          <p className="text-5xl font-extrabold text-primaryBlue mb-4">$0</p>
+          <ul className="text-left space-y-2 mb-6">
+            <li className="flex items-center">
+              <span className="text-green-600 mr-2">✔️</span>Limited AI generations
+            </li>
+            <li className="flex items-center">
+              <span className="text-green-600 mr-2">✔️</span>Basic analytics
+            </li>
+            <li className="flex items-center">
+              <span className="text-green-600 mr-2">✔️</span>Community support
+            </li>
+          </ul>
+          <button
+            onClick={() => toast.success('You are already on the free plan!')}
+            className="w-full px-4 py-2 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300 transition"
+          >
+            Current Plan
+          </button>
+        </div>
+
+        {/* Pro Plan */}
+        <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center border-2 border-primaryBlue">
+          <h2 className="text-2xl font-bold text-primaryBlue mb-2">Pro</h2>
+          <p className="text-5xl font-extrabold text-primaryBlue mb-4">$9.99<span className="text-sm font-normal">/mo</span></p>
+          <ul className="text-left space-y-2 mb-6">
+            <li className="flex items-center">
+              <span className="text-green-600 mr-2">✔️</span>Unlimited AI generations
+            </li>
+            <li className="flex items-center">
+              <span className="text-green-600 mr-2">✔️</span>Priority AI processing
+            </li>
+            <li className="flex items-center">
+              <span className="text-green-600 mr-2">✔️</span>Advanced SEO & proposals
+            </li>
+          </ul>
+          <button
+            onClick={handleUpgrade}
+            className="w-full px-4 py-2 bg-primaryBlue text-white rounded-full hover:bg-darkNavy transition"
+          >
+            Upgrade to Pro
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom CTA */}
+      <div className="mt-12 text-center">
+        <Link
+          to="/features"
+          className="text-primaryBlue hover:underline"
+        >
+          Explore Features →
+        </Link>
+      </div>
     </div>
   );
 };

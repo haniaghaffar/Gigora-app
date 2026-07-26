@@ -109,7 +109,7 @@ navigate("/login");    }, 2000);
 
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-3">
 
             <input
               type="text"

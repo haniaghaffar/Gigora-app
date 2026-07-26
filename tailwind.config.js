@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./public/index.html",
@@ -12,7 +13,24 @@ module.exports = {
         lightBlue: "#EFF6FF",
         darkText: "#111827",
         graySub: "#6B7280",
-        successGreen: "#059669",
+        successGreen: "#059669"
+      },
+      spacing: {
+        xs: "0.5rem",
+        sm: "1rem",
+        md: "1.5rem",
+        lg: "2rem",
+        xl: "3rem"
+      },
+      container: {
+        center: true,
+        padding: "2rem"
+      },
+      borderRadius: {
+        DEFAULT: "0.5rem"
+      },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"]
       }
     }
   },

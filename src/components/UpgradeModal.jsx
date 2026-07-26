@@ -1,4 +1,5 @@
 import Button from "./Button";
+import toast from 'react-hot-toast';
 
 function UpgradeModal({ isOpen, onClose }) {
 
@@ -142,7 +143,7 @@ function UpgradeModal({ isOpen, onClose }) {
           <Button
             className="flex-1"
             onClick={()=>{
-              alert("Upgrade flow coming soon!");
+                toast('Upgrade flow coming soon!');
             }}
           >
             Upgrade Now
