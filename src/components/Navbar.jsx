@@ -155,44 +155,12 @@ function Navbar() {
 
 
 
-          <button
-
-            onClick={() =>
-              scrollToSection("features")
-            }
-
-            className="
-            text-gray-600
-            hover:text-primaryBlue
-            font-medium
-            transition
-            "
-          >
-
-            Features
-
-          </button>
-
-
-
-
-          <button
-
-            onClick={() =>
-              scrollToSection("pricing")
-            }
-
-            className="
-            text-gray-600
-            hover:text-primaryBlue
-            font-medium
-            transition
-            "
-          >
-
-            Pricing
-
-          </button>
+<Link to="/features" className="text-gray-600 hover:text-primaryBlue font-medium transition">
+  Features
+</Link>
+<Link to="/pricing" className="text-gray-600 hover:text-primaryBlue font-medium transition">
+  Pricing
+</Link>
 
 
 

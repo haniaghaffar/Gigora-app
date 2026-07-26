@@ -8,6 +8,10 @@ import ProfileAnalyzer from "../pages/ProfileAnalyzer";
 import GigSEO from "../pages/GigSEO";
 import ProposalGenerator from "../pages/ProposalGenerator";
 import History from "../pages/History";
+import Features from "../pages/Features";
+import Pricing from "../pages/Pricing";
+import Success from "../pages/Success";
+import Cancel from "../pages/Cancel";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -18,6 +22,12 @@ const AppRoutes = () => (
 
     {/* Landing */}
     <Route path="/" element={<Landing />} />
+
+    {/* New Pages */}
+    <Route path="/features" element={<Features />} />
+    <Route path="/pricing" element={<Pricing />} />
+    <Route path="/checkout/success" element={<Success />} />
+    <Route path="/checkout/cancel" element={<Cancel />} />
 
     {/* Login & Signup - only for guests */}
     <Route element={<PublicRoute />}>
