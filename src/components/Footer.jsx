@@ -1,144 +1,96 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { ArrowUp, Sparkles, Mail } from "lucide-react";
+import { Sparkles, Mail } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 function Footer() {
-  const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-
-    if (section) {
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  };
-
   return (
-    <footer className="bg-darkNavy text-white">
+    <footer className="bg-darkNavy border-t border-white/10 text-white">
       <div className="max-w-7xl mx-auto px-6 py-16">
 
-        {/* Top */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
 
           {/* Brand */}
           <div>
-            <h2 className="text-3xl font-bold text-white">
-              GIGORA
-            </h2>
+            <div className="flex items-center gap-2">
+              <Sparkles size={24} className="text-yellow-400" />
+              <h2 className="text-3xl font-bold">Gigora</h2>
+            </div>
 
-            <p className="mt-4 text-gray-300 leading-7">
+            <p className="mt-5 text-gray-300 leading-7">
               AI-powered platform built for freelancers to optimize
               profiles, improve gig visibility, and generate
-              high-converting proposals.
+              high-converting proposals with ease.
             </p>
 
-            <div className="flex items-center gap-4 mt-6">
+            <div className="flex items-center gap-4 mt-8">
 
-              <button className="p-2 rounded-lg bg-white/10 hover:bg-primaryBlue transition">
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 rounded-xl bg-white/10 hover:bg-primaryBlue transition-all duration-300"
+              >
                 <FaGithub size={20} />
-              </button>
+              </a>
 
-              <button className="p-2 rounded-lg bg-white/10 hover:bg-primaryBlue transition">
+              <a
+                href="https://linkedin.com/in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 rounded-xl bg-white/10 hover:bg-primaryBlue transition-all duration-300"
+              >
                 <FaLinkedin size={20} />
-              </button>
+              </a>
 
-              <button className="p-2 rounded-lg bg-white/10 hover:bg-primaryBlue transition">
+              <a
+                href="mailto:contact@mufasadevelopers.com"
+                className="p-3 rounded-xl bg-white/10 hover:bg-primaryBlue transition-all duration-300"
+              >
                 <Mail size={20} />
-              </button>
+              </a>
 
             </div>
           </div>
 
-          {/* Product */}
+          {/* AI Tools */}
           <div>
-            <h3 className="text-lg font-semibold mb-5">
-              Product
+            <h3 className="text-xl font-semibold mb-6">
+              AI Tools
             </h3>
 
             <ul className="space-y-4 text-gray-300">
-
-              <li>
-                <button
-                  onClick={() => scrollToSection("features")}
-                  className="hover:text-white transition"
-                >
-                  Features
-                </button>
-              </li>
-
-              <li>
-                <button
-                  onClick={() => scrollToSection("pricing")}
-                  className="hover:text-white transition"
-                >
-                  Pricing
-                </button>
-              </li>
-
-              <li>
-                <Link
-                  to="/login"
-                  className="hover:text-white transition"
-                >
-                  Login
-                </Link>
-              </li>
-
-              <li>
-                <Link
-                  to="/signup"
-                  className="hover:text-white transition"
-                >
-                  Get Started
-                </Link>
-              </li>
-
+              <li>AI Profile Analyzer</li>
+              <li>SEO Optimizer</li>
+              <li>Proposal Generator</li>
+              <li>History Dashboard</li>
             </ul>
           </div>
 
-          {/* CTA */}
+          {/* Platform */}
           <div>
-            <h3 className="text-lg font-semibold mb-5">
-              Ready to Win More Clients?
+            <h3 className="text-xl font-semibold mb-6">
+              Platform
             </h3>
 
-            <p className="text-gray-300 leading-7">
-              Use AI to create better proposals, optimize your gigs,
-              and grow your freelance business faster.
-            </p>
-
-            <Link
-              to="/signup"
-              className="inline-flex items-center gap-2 mt-6 bg-primaryBlue hover:bg-blue-700 px-5 py-3 rounded-xl font-medium transition"
-            >
-              <Sparkles size={18} />
-              Get Started
-            </Link>
+            <ul className="space-y-4 text-gray-300">
+              <li>Modern Dashboard</li>
+              <li>AI-Powered Workflow</li>
+              <li>Secure Authentication</li>
+              <li>Powered by Supabase</li>
+            </ul>
           </div>
 
         </div>
 
-        {/* Bottom */}
         <div className="border-t border-white/10 mt-14 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
 
           <p className="text-gray-400 text-sm">
             © 2026 Gigora. All rights reserved.
           </p>
 
-          <button
-            onClick={() =>
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              })
-            }
-            className="flex items-center gap-2 text-gray-300 hover:text-white transition"
-          >
-            <ArrowUp size={18} />
-            Back to Top
-          </button>
+          <p className="text-gray-500 text-sm text-center">
+            Built with React • Tailwind CSS • Supabase
+          </p>
 
         </div>
 

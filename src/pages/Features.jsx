@@ -105,24 +105,7 @@ const Features = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="text-center py-16 bg-lightBlue">
-        <h2 className="text-4xl font-bold text-darkNavy mb-4">Ready to Supercharge Your Freelance Business?</h2>
-        <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
-          <Link
-            to="/pricing"
-            className="px-8 py-3 bg-primaryBlue text-white rounded-full shadow-lg hover:bg-darkNavy hover:scale-105 transition-transform"
-          >
-            Get Started
-          </Link>
-          <Link
-            to="/pricing"
-            className="px-8 py-3 bg-white text-primaryBlue border border-primaryBlue rounded-full shadow hover:bg-primaryBlue hover:text-white transition"
-          >
-            View Pricing
-          </Link>
-        </div>
-      </section>
+      
 
       {/* Upgrade Modal */}
       <UpgradeModal isOpen={showUpgrade} onClose={() => setShowUpgrade(false)} />

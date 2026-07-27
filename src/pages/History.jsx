@@ -1,15 +1,30 @@
 import { useEffect, useState } from "react";
+import { Menu,
+  X,
+  Sparkles,
+  UserCircle2,
+  FileText,
+} from "lucide-react";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
 import { useNavigate } from "react-router-dom";
-import { getHistory, deleteHistory } from "../services/api";
+// Using mock data; no API calls
 
 function History() {
   const navigate = useNavigate();
 
+  // Mock history data
+  const MOCK_HISTORY = [
+    { id: 1, type: 'AI Profile Analyzer', date: '2023-08-12T14:23:00Z', status: 'completed', content: 'AI Profile Analyzer result example content...' },
+    { id: 2, type: 'SEO Optimizer', date: '2023-09-05T09:10:00Z', status: 'completed', content: 'SEO Optimizer generated suggestions...' },
+    { id: 3, type: 'Proposal Generator', date: '2023-10-21T16:45:00Z', status: 'completed', content: 'Proposal Generator drafted a proposal...' },
+    { id: 4, type: 'AI Profile Analyzer', date: '2023-11-02T11:30:00Z', status: 'completed', content: 'Another AI profile result...' },
+    { id: 5, type: 'SEO Optimizer', date: '2023-12-15T08:45:00Z', status: 'completed', content: 'SEO analysis details...' },
+    { id: 6, type: 'Proposal Generator', date: '2024-01-10T13:20:00Z', status: 'completed', content: 'Generated proposal for client...' },
+  ];
   const [history, setHistory] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,70 +54,30 @@ function History() {
   }, [toast]);
 
 
-  const loadHistory = async () => {
-    try {
-      setLoading(true);
-
-      const data = await getHistory();
-
-      setHistory(
-        Array.isArray(data)
-          ? data.slice(0, 20)
-          : []
-      );
-
-    } catch (error) {
-      setToast({
-        message: "Failed to load history.",
-        type: "error",
-      });
-
-    } finally {
+  const loadHistory = () => {
+    setLoading(true);
+    // Simulate async fetch with mock data
+    setTimeout(() => {
+      setHistory(MOCK_HISTORY);
       setLoading(false);
-    }
+    }, 1200);
   };
 
 
-  const handleDelete = async (id) => {
-
+  const handleDelete = (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this history item?"
     );
-
     if (!confirmDelete) return;
 
+    // Remove item locally
+    setHistory((prev) => prev.filter((item) => item.id !== id));
+    if (selectedItem?.id === id) setSelectedItem(null);
 
-    try {
-
-      await deleteHistory(id);
-
-
-      setHistory((prev) =>
-        prev.filter(
-          (item) => item.id !== id
-        )
-      );
-
-
-      if(selectedItem?.id === id){
-        setSelectedItem(null);
-      }
-
-
-      setToast({
-        message: "History deleted successfully.",
-        type: "success",
-      });
-
-
-    } catch (err) {
-  console.log("History Error:", err);
-
-  setToast({
-    message: "Failed to load history.",
-    type: "error",
-  });
-}
+    setToast({
+      message: "History deleted successfully.",
+      type: "success",
+    });
   };
 
 
@@ -148,8 +123,8 @@ function History() {
 
         <Card className="text-center py-12">
 
-          <div className="text-6xl">
-            📜
+          <div className="flex justify-center">
+            <FileText size={48} className="text-gray-400" />
           </div>
 
 

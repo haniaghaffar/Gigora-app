@@ -4,12 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary: #1A56DB;
+  --color-primary-light: #3B82F6;
+  --color-primary-dark: #1E3A8A;
+  --radius: 0.75rem;
+  --transition: all 0.2s ease-in-out;
+}
+
 html, body {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
-}
+}
+
+html {
+  scroll-behavior: smooth;
+}

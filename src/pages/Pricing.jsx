@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import API from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -81,15 +80,7 @@ const Pricing = () => {
         </div>
       </div>
 
-      {/* Bottom CTA */}
-      <div className="mt-12 text-center">
-        <Link
-          to="/features"
-          className="text-primaryBlue hover:underline"
-        >
-          Explore Features →
-        </Link>
-      </div>
+      
     </div>
   );
 };
