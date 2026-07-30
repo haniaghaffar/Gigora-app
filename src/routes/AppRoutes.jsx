@@ -12,6 +12,8 @@ import Features from "../pages/Features";
 import Pricing from "../pages/Pricing";
 import Success from "../pages/Success";
 import Cancel from "../pages/Cancel";
+import Billing from "../pages/Billing";
+import Settings from "../pages/Settings";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -38,6 +40,7 @@ const AppRoutes = () => (
     {/* Dashboard - only for logged in users */}
     <Route element={<ProtectedRoute />}>
       <Route element={<DashboardLayout />}>
+      <Route path="/settings" element={<Settings />} />
 
         <Route
           path="/dashboard"
@@ -58,6 +61,7 @@ const AppRoutes = () => (
           path="/dashboard/proposal-generator"
           element={<ProposalGenerator />}
         />
+        <Route path="/billing" element={<Billing />} />
 
         <Route
           path="/dashboard/history"
