@@ -1,5 +1,6 @@
 import React from "react";
 import { toast } from "react-hot-toast";
+import { subscribePlan } from "../services/api";
 import {
   Check,
   CheckCircle2,
@@ -12,12 +13,18 @@ import {
 } from "lucide-react";
 
 const Pricing = () => {
-  const handleUpgrade = () => {
-    toast.success("Redirecting...");
-
-    setTimeout(() => {
-      window.location.assign("/checkout/success");
-    }, 800);
+  const handleUpgrade = async () => {
+    toast.success("Subscribing to Pro plan...");
+    try {
+      await subscribePlan('pro');
+      toast.success("Subscription successful! Redirecting...");
+      setTimeout(() => {
+        window.location.assign("/checkout/success");
+      }, 800);
+    } catch (error) {
+      console.error(error);
+      toast.error("Subscription failed. Please try again.");
+    }
   };
 
   return (

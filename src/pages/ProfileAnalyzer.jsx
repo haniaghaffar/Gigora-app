@@ -3,7 +3,7 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
-import { analyzeProfile } from "../services/api";
+import { analyzeProfile, saveHistory } from "../services/api";
 
 function ProfileAnalyzer() {
   const [profile, setProfile] = useState("");
@@ -45,7 +45,11 @@ function ProfileAnalyzer() {
       });
 
       setResult(response);
-
+      await saveHistory({
+        type: "profile",
+        input: { profile: cleanProfile },
+        output: response,
+      });
       showToast("Profile analyzed successfully.", "success");
     } catch (err) {
       const status = err?.response?.status;

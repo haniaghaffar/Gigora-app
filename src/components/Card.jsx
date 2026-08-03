@@ -7,14 +7,15 @@ export default function Card({ children, className = "" }) {
         relative overflow-hidden
         rounded-lg
         border border-graySub/20
-        bg-white/10
+        bg-white/5
         backdrop-blur-lg
         p-6
         shadow-sm
-        transition-all duration-300
-        hover:-translate-y-1
+        transition-all duration-300 ease-in-out
+        hover:-translate-y-1 hover:scale-105
         hover:border-primaryBlue/40
         hover:shadow-primaryBlue/20
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primaryBlue/60
         ${className}
       `}
     >

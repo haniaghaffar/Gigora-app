@@ -7,6 +7,7 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { cancelSubscription } from "../services/api";
 
 const Billing = () => {
   const [cancelled, setCancelled] = useState(false);
@@ -18,12 +19,16 @@ const Billing = () => {
     payment: "Visa •••• 4242",
   };
 
-  const handleCancelSubscription = () => {
+  const handleCancelSubscription = async () => {
     if (cancelled) return;
-
-    setCancelled(true);
-
-    toast.success("Subscription cancelled successfully!");
+    try {
+      await cancelSubscription();
+      setCancelled(true);
+      toast.success("Subscription cancelled successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to cancel subscription.");
+    }
   };
 
   return (
