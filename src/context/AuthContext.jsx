@@ -8,32 +8,54 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   const refreshUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    if (!supabase?.auth?.getUser) {
+      setUser(null);
+      return;
+    }
 
-    setUser(user ?? null);
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user ?? null);
+    } catch {
+      setUser(null);
+    }
   };
 
   useEffect(() => {
     const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      if (!supabase?.auth?.getSession) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
 
-      setUser(session?.user ?? null);
-      setLoading(false);
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        setUser(session?.user ?? null);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getSession();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+    if (supabase?.auth?.onAuthStateChange) {
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null);
+      });
 
-    return () => subscription.unsubscribe();
+      return () => subscription.unsubscribe();
+    }
+
+    return undefined;
   }, []);
 
   return (

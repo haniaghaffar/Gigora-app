@@ -14,6 +14,7 @@ import Success from "../pages/Success";
 import Cancel from "../pages/Cancel";
 import Billing from "../pages/Billing";
 import Settings from "../pages/Settings";
+        import Checkout from "../pages/Checkout";
 
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
@@ -67,6 +68,8 @@ const AppRoutes = () => (
           path="/dashboard/history"
           element={<History />}
         />
+
+<Route path="/checkout" element={<Checkout />} />
 
       </Route>
     </Route>

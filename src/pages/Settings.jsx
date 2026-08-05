@@ -10,266 +10,538 @@ import {
   LogOut,
   FileText,
   Code2,
+  ShieldCheck,
+  Crown,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+
 const Settings = () => {
+
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("");
-  const [skills, setSkills] = useState("");
-  const [notifications, setNotifications] = useState(true);
-  const [loading, setLoading] = useState(false);
+
+  const [name,setName] = useState("");
+  const [bio,setBio] = useState("");
+  const [skills,setSkills] = useState("");
+  const [notifications,setNotifications] = useState(true);
+  const [loading,setLoading] = useState(false);
 
 
-  useEffect(() => {
-    if (user) {
+
+  useEffect(()=>{
+
+    if(user){
+
       setName(user.user_metadata?.name || "");
       setBio(user.user_metadata?.bio || "");
       setSkills(user.user_metadata?.skills || "");
+
       setNotifications(
         user.user_metadata?.notifications ?? true
       );
+
     }
-  }, [user]);
+
+  },[user]);
 
 
-  const saveSettings = async () => {
+
+
+
+  const saveSettings = async()=>{
+
     setLoading(true);
 
-    const { error } = await supabase.auth.updateUser({
-      data: {
+
+    const {error}=await supabase.auth.updateUser({
+
+      data:{
         name,
         bio,
         skills,
-        notifications,
-      },
+        notifications
+      }
+
     });
 
 
-    if (error) {
+
+    if(error){
+
       toast.error(error.message);
       setLoading(false);
       return;
+
     }
 
 
-    toast.success("Profile updated successfully");
+    toast.success("Settings updated successfully");
     setLoading(false);
+
   };
 
 
-  const logout = async () => {
 
-    const { error } = await supabase.auth.signOut();
 
-    if(error){
-      toast.error(error.message);
-      return;
-    }
 
-    toast.success("Logged out successfully");
+  const logout = async()=>{
+
+    await supabase.auth.signOut();
+
+    toast.success("Logged out");
+
     navigate("/");
+
   };
+
+
+
+  const isPro =
+    user?.user_metadata?.plan === "pro";
+
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 py-10 px-4">
 
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+<div className="
+min-h-screen
+bg-gradient-to-br
+from-indigo-100
+via-purple-50
+to-pink-100
+py-12
+px-4
+">
 
 
-        <h1 className="text-4xl font-extrabold text-primaryBlue mb-3">
-          Settings
-        </h1>
+<div className="
+max-w-4xl
+mx-auto
+bg-white
+rounded-3xl
+shadow-xl
+overflow-hidden
+">
 
-        <p className="text-gray-600 mb-8">
-          Manage your profile and account preferences.
-        </p>
 
+{/* Header */}
 
-        {/* Avatar */}
+<div className="
+bg-gradient-to-r
+from-primaryBlue
+to-indigo-600
+p-8
+text-white
+">
 
-        <div className="flex items-center gap-4 mb-8">
 
-          <div className="w-20 h-20 rounded-full bg-primaryBlue text-white flex items-center justify-center text-3xl font-bold">
-            {name?.charAt(0)?.toUpperCase() || "U"}
-          </div>
+<div className="flex items-center gap-5">
 
 
-          <div>
-            <h2 className="text-xl font-bold">
-              {name || "User"}
-            </h2>
+<div className="
+w-24
+h-24
+rounded-full
+bg-white
+text-primaryBlue
+flex
+items-center
+justify-center
+text-4xl
+font-bold
+shadow-lg
+">
 
-            <p className="text-gray-500">
-              {user?.email}
-            </p>
-          </div>
+{name?.charAt(0)?.toUpperCase() || "U"}
 
-        </div>
+</div>
 
 
 
-        {/* Name */}
+<div>
 
-        <div className="mb-6">
+<h1 className="text-3xl font-bold">
+{name || "User"}
+</h1>
 
-          <label className="font-semibold flex items-center gap-2 mb-2">
-            <User size={18}/>
-            Full Name
-          </label>
 
+<p className="opacity-90">
+{user?.email}
+</p>
 
-          <input
-            type="text"
-            value={name}
-            onChange={(e)=>setName(e.target.value)}
-            placeholder="Enter your name"
-            className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-primaryBlue outline-none"
-          />
 
-        </div>
 
+{isPro && (
 
+<span className="
+inline-flex
+items-center
+gap-1
+mt-3
+bg-yellow-400
+text-black
+px-3
+py-1
+rounded-full
+text-sm
+font-semibold
+">
 
-        {/* Email */}
+<Crown size={15}/>
+PRO
 
-        <div className="mb-6">
+</span>
 
-          <label className="font-semibold flex items-center gap-2 mb-2">
-            <Mail size={18}/>
-            Email
-          </label>
+)}
 
 
-          <input
-            type="email"
-            value={user?.email || ""}
-            disabled
-            className="w-full border rounded-xl p-3 bg-gray-100"
-          />
+</div>
 
-        </div>
 
+</div>
 
 
-        {/* Bio */}
+</div>
 
-        <div className="mb-6">
 
-          <label className="font-semibold flex items-center gap-2 mb-2">
-            <FileText size={18}/>
-            Bio
-          </label>
 
 
-          <textarea
-            value={bio}
-            onChange={(e)=>setBio(e.target.value)}
-            placeholder="Tell something about yourself..."
-            rows="4"
-            className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-primaryBlue outline-none"
-          />
 
-        </div>
+<div className="p-8 space-y-8">
 
 
 
-        {/* Skills */}
+{/* Profile */}
 
-        <div className="mb-6">
+<div>
 
-          <label className="font-semibold flex items-center gap-2 mb-2">
-            <Code2 size={18}/>
-            Skills
-          </label>
 
+<h2 className="text-xl font-bold mb-5">
+Profile Information
+</h2>
 
-          <input
-            type="text"
-            value={skills}
-            onChange={(e)=>setSkills(e.target.value)}
-            placeholder="React, JavaScript, Python..."
-            className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-primaryBlue outline-none"
-          />
 
-        </div>
 
+<div className="space-y-5">
 
 
-        {/* Notifications */}
 
-        <div className="flex justify-between items-center border rounded-xl p-4 mb-8">
+<div>
 
-          <div className="flex items-center gap-3">
+<label className="font-semibold flex gap-2 mb-2">
 
-            <Bell size={20}/>
+<User size={18}/>
+Full Name
 
-            <div>
-              <p className="font-semibold">
-                Email Notifications
-              </p>
+</label>
 
-              <p className="text-sm text-gray-500">
-                Receive updates and alerts
-              </p>
-            </div>
 
-          </div>
+<input
 
+value={name}
 
-          <input
-            type="checkbox"
-            checked={notifications}
-            onChange={()=>setNotifications(!notifications)}
-            className="w-5 h-5 accent-indigo-600"
-          />
+onChange={(e)=>setName(e.target.value)}
 
-        </div>
+className="
+w-full
+border
+rounded-xl
+p-3
+focus:ring-2
+focus:ring-primaryBlue
+outline-none
+"
 
+/>
 
+</div>
 
-        {/* Buttons */}
 
-        <div className="flex flex-col sm:flex-row gap-4">
 
 
-          <button
-            onClick={saveSettings}
-            disabled={loading}
-            className="flex-1 flex justify-center items-center gap-2 bg-primaryBlue text-white py-3 rounded-xl hover:bg-darkNavy transition disabled:opacity-50"
-          >
 
-            <Save size={18}/>
+<div>
 
-            {loading ? "Saving..." : "Save Changes"}
+<label className="font-semibold flex gap-2 mb-2">
 
-          </button>
+<Mail size={18}/>
+Email
 
+</label>
 
 
-          <button
-            onClick={logout}
-            className="flex-1 flex justify-center items-center gap-2 bg-red-500 text-white py-3 rounded-xl hover:bg-red-600 transition"
-          >
+<input
 
-            <LogOut size={18}/>
+disabled
 
-            Logout
+value={user?.email || ""}
 
-          </button>
+className="
+w-full
+border
+rounded-xl
+p-3
+bg-gray-100
+"
 
+/>
 
-        </div>
+</div>
 
 
-      </div>
 
-    </div>
+
+
+<div>
+
+<label className="font-semibold flex gap-2 mb-2">
+
+<FileText size={18}/>
+Bio
+
+</label>
+
+
+<textarea
+
+rows="4"
+
+value={bio}
+
+onChange={(e)=>setBio(e.target.value)}
+
+className="
+w-full
+border
+rounded-xl
+p-3
+outline-none
+focus:ring-2
+focus:ring-primaryBlue
+"
+
+/>
+
+</div>
+
+
+
+
+
+<div>
+
+<label className="font-semibold flex gap-2 mb-2">
+
+<Code2 size={18}/>
+Skills
+
+</label>
+
+
+<input
+
+value={skills}
+
+onChange={(e)=>setSkills(e.target.value)}
+
+placeholder="React, AI, Python..."
+
+className="
+w-full
+border
+rounded-xl
+p-3
+outline-none
+focus:ring-2
+focus:ring-primaryBlue
+"
+
+/>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+{/* Notification */}
+
+<div className="
+border
+rounded-2xl
+p-5
+flex
+justify-between
+items-center
+">
+
+
+<div className="flex gap-3">
+
+<Bell/>
+
+<div>
+
+<h3 className="font-semibold">
+Email Notifications
+</h3>
+
+
+<p className="text-sm text-gray-500">
+Receive important updates
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+<input
+
+type="checkbox"
+
+checked={notifications}
+
+onChange={()=>setNotifications(!notifications)}
+
+className="w-5 h-5 accent-primaryBlue"
+
+/>
+
+
+</div>
+
+
+
+
+
+
+{/* Security */}
+
+<div className="
+border
+rounded-2xl
+p-5
+flex
+items-center
+gap-3
+">
+
+
+<ShieldCheck className="text-green-600"/>
+
+<div>
+
+<h3 className="font-semibold">
+Account Security
+</h3>
+
+<p className="text-sm text-gray-500">
+Protected with Supabase authentication
+</p>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+{/* Actions */}
+
+
+<div className="flex flex-col sm:flex-row gap-4 pt-4">
+
+
+<button
+
+onClick={saveSettings}
+
+disabled={loading}
+
+className="
+flex-1
+flex
+justify-center
+items-center
+gap-2
+bg-primaryBlue
+text-white
+py-3
+rounded-xl
+hover:bg-darkNavy
+transition
+"
+
+>
+
+<Save size={18}/>
+
+{loading ? "Saving..." : "Save Changes"}
+
+</button>
+
+
+
+
+<button
+
+onClick={logout}
+
+className="
+flex-1
+flex
+justify-center
+items-center
+gap-2
+bg-red-500
+text-white
+py-3
+rounded-xl
+hover:bg-red-600
+transition
+"
+
+>
+
+<LogOut size={18}/>
+
+Logout
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
   );
+
 };
 
 

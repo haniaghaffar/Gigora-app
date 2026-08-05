@@ -4,8 +4,12 @@ import Button from "../components/Button";
 import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
 import { optimizeSEO } from "../services/api";
+import { supabase } from "../services/supabase";
+import { useAuth } from "../context/AuthContext";
 
 function GigSEO() {
+  const { user } = useAuth();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -26,9 +30,25 @@ function GigSEO() {
   const copyText = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
-      showToast("Copied successfully!", "success");
+      showToast("Copied successfully!");
     } catch {
       showToast("Failed to copy.", "error");
+    }
+  };
+
+  const saveHistory = async (content) => {
+    if (!user) return;
+
+    try {
+      await supabase.from("history").insert([
+        {
+          user_id: user.id,
+          type: "SEO",
+          content,
+        },
+      ]);
+    } catch (err) {
+      console.log("History save skipped:", err.message);
     }
   };
 
@@ -71,8 +91,17 @@ function GigSEO() {
       });
 
       setResult(response);
-      showToast("Gig optimized successfully!", "success");
+
+      await saveHistory(
+        response.optimizedDescription ||
+        response.optimizedTitle ||
+        "SEO Optimization Completed"
+      );
+
+      showToast("Gig optimized successfully!");
     } catch (err) {
+      console.log(err);
+
       const status = err?.response?.status;
 
       if (status === 401) {
@@ -80,7 +109,7 @@ function GigSEO() {
       } else if (status === 403) {
         showToast("Daily free limit reached.", "error");
       } else if (status === 429) {
-        showToast("Too many requests. Please wait a minute.", "error");
+        showToast("Too many requests. Please wait.", "error");
       } else {
         showToast("Something went wrong.", "error");
       }
@@ -90,7 +119,7 @@ function GigSEO() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 p-6 md:p-8">
+        <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 p-6 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
 
         {/* Header */}
@@ -99,20 +128,23 @@ function GigSEO() {
           <h1 className="text-4xl font-bold text-gray-900">
             Gig SEO Optimizer
           </h1>
+
           <p className="mt-3 text-lg text-gray-600 max-w-3xl">
             Improve your Fiverr & Upwork gig using AI-powered SEO suggestions,
-            optimized titles, descriptions, and keyword recommendations.
+            optimized titles, descriptions and keyword recommendations.
           </p>
         </div>
 
         {/* Input Form */}
 
         <Card className="bg-white border border-gray-200 rounded-3xl shadow-xl p-8">
+
           <h2 className="text-2xl font-bold text-gray-900 mb-8">
             Gig Information
           </h2>
 
           <div className="mb-6">
+
             <label className="block text-gray-700 font-semibold mb-2">
               Gig Title
             </label>
@@ -122,7 +154,7 @@ function GigSEO() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. I will build a responsive React website"
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-black placeholder-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all duration-200"
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-black placeholder-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none"
             />
 
             <div className="flex justify-between mt-2">
@@ -140,59 +172,60 @@ function GigSEO() {
                 {title.length}/{TITLE_LIMIT}
               </span>
             </div>
+
           </div>
 
           <div>
+
             <label className="block text-gray-700 font-semibold mb-2">
               Gig Description
             </label>
 
             <textarea
+              rows={8}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe your services, skills and experience..."
-              rows={8}
-              className="w-full resize-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-black placeholder-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all duration-200"
+              className="w-full resize-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-black placeholder-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none"
             />
 
-            <p className="text-sm text-gray-500 mt-2">
-              Include your skills, technologies, experience and unique selling
-              points.
-            </p>
           </div>
 
           {error && (
-            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
-              <p className="text-red-600 font-medium">{error}</p>
+            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4">
+              <p className="text-red-600">{error}</p>
             </div>
           )}
 
-          <div className="mt-8">
-            <Button
-              onClick={handleOptimize}
-              disabled={loading}
-              className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all"
-            >
-              {loading ? "Optimizing..." : "✨ Optimize Gig"}
-            </Button>
-          </div>
+          <Button
+            onClick={handleOptimize}
+            disabled={loading}
+            className="mt-8 w-full md:w-auto"
+          >
+            {loading ? "Optimizing..." : "Optimize Gig"}
+          </Button>
+
         </Card>
-                {/* Loading Skeleton */}
+
+        {/* Loading */}
+
         {loading && (
           <div className="space-y-6">
-            <Skeleton className="h-32 rounded-2xl" />
-            <Skeleton className="h-72 rounded-2xl" />
+            <Skeleton className="h-32 rounded-xl" />
+            <Skeleton className="h-72 rounded-xl" />
           </div>
         )}
 
         {/* Results */}
+
         {!loading && result && (
+
           <div className="space-y-6">
 
-            {/* SEO Score */}
-            <Card className="bg-white border rounded-3xl shadow-xl p-8">
-              <h2 className="text-2xl font-bold mb-8">
-                📈 SEO Score
+            <Card className="p-8">
+
+              <h2 className="text-2xl font-bold mb-6">
+                SEO Score
               </h2>
 
               {[
@@ -212,72 +245,85 @@ function GigSEO() {
                   color: "bg-purple-600",
                 },
               ].map((item) => (
-                <div key={item.label} className="mb-6">
+
+                <div key={item.label} className="mb-5">
+
                   <div className="flex justify-between mb-2">
-                    <span className="font-semibold text-gray-700">
-                      {item.label}
-                    </span>
-
-                    <span className="font-bold text-gray-900">
-                      {item.score}%
-                    </span>
+                    <span>{item.label}</span>
+                    <span>{item.score}%</span>
                   </div>
 
-                  <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-3 bg-gray-200 rounded-full">
+
                     <div
-                      className={`${item.color} h-3 rounded-full transition-all duration-700`}
-                      style={{ width: `${item.score}%` }}
+                      className={`${item.color} h-3 rounded-full`}
+                      style={{
+                        width: `${item.score}%`,
+                      }}
                     />
+
                   </div>
+
                 </div>
+
               ))}
+
             </Card>
 
-            {/* Optimized Title */}
-            <Card className="bg-white border rounded-3xl shadow-xl p-8">
-              <div className="flex justify-between items-center">
+            <Card className="p-8">
+
+              <div className="flex justify-between">
+
                 <h2 className="text-2xl font-bold">
-                  ✨ Optimized Title
+                  Optimized Title
                 </h2>
 
                 <Button
-                  onClick={() => copyText(result?.optimizedTitle || "")}
-                  className="bg-blue-600 text-white px-5 py-2 rounded-xl"
+                  onClick={() =>
+                    copyText(result?.optimizedTitle || "")
+                  }
                 >
                   Copy
                 </Button>
+
               </div>
 
-              <p className="mt-6 text-lg text-gray-700">
+              <p className="mt-5">
                 {result?.optimizedTitle}
               </p>
+
             </Card>
 
-            {/* Optimized Description */}
-            <Card className="bg-white border rounded-3xl shadow-xl p-8">
-              <div className="flex justify-between items-center">
+            <Card className="p-8">
+
+              <div className="flex justify-between">
+
                 <h2 className="text-2xl font-bold">
-                  📝 Optimized Description
+                  Optimized Description
                 </h2>
 
                 <Button
-                  onClick={() => copyText(result?.optimizedDescription || "")}
-                  className="bg-blue-600 text-white px-5 py-2 rounded-xl"
+                  onClick={() =>
+                    copyText(result?.optimizedDescription || "")
+                  }
                 >
                   Copy
                 </Button>
+
               </div>
 
-              <p className="mt-6 text-gray-700 leading-8">
+              <p className="mt-5 whitespace-pre-line leading-8">
                 {result?.optimizedDescription}
               </p>
+
             </Card>
 
-            {/* Keywords */}
-            <Card className="bg-white border rounded-3xl shadow-xl p-8">
-              <div className="flex justify-between items-center">
+            <Card className="p-8">
+
+              <div className="flex justify-between">
+
                 <h2 className="text-2xl font-bold">
-                  🏷 SEO Keywords
+                  Suggested Keywords
                 </h2>
 
                 <Button
@@ -288,17 +334,19 @@ function GigSEO() {
                         .join(", ") || ""
                     )
                   }
-                  className="bg-blue-600 text-white px-5 py-2 rounded-xl"
                 >
                   Copy
                 </Button>
+
               </div>
 
-              <div className="flex flex-wrap gap-3 mt-8">
+              <div className="flex flex-wrap gap-3 mt-6">
+
                 {result?.suggestedTags?.map((tag, index) => (
+
                   <span
                     key={index}
-                    className={`px-5 py-2 rounded-full font-medium ${
+                    className={`px-4 py-2 rounded-full ${
                       tag.valid
                         ? "bg-green-100 text-green-700"
                         : "bg-red-100 text-red-700"
@@ -306,32 +354,36 @@ function GigSEO() {
                   >
                     {tag.tag}
                   </span>
+
                 ))}
+
               </div>
+
             </Card>
 
-            {/* Regenerate */}
             <div className="flex justify-end">
+
               <Button
                 onClick={handleOptimize}
                 disabled={loading}
-                className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "Regenerating..." : "🔄 Regenerate"}
+                {loading ? "Regenerating..." : "Regenerate"}
               </Button>
+
             </div>
 
           </div>
+
         )}
 
       </div>
 
-      {/* Toast */}
       <Toast
         message={toastMessage}
         type={toastType}
         onClose={() => setToastMessage("")}
       />
+
     </div>
   );
 }

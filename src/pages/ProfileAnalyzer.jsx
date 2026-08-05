@@ -3,9 +3,13 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
-import { analyzeProfile, saveHistory } from "../services/api";
+import { analyzeProfile } from "../services/api";
+import { supabase } from "../services/supabase";
+import { useAuth } from "../context/AuthContext";
 
 function ProfileAnalyzer() {
+  const { user } = useAuth();
+
   const [profile, setProfile] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,6 +22,22 @@ function ProfileAnalyzer() {
   const showToast = (message, type = "success") => {
     setToastMessage(message);
     setToastType(type);
+  };
+
+  const saveHistory = async (content) => {
+    if (!user) return;
+
+    try {
+      await supabase.from("history").insert([
+        {
+          user_id: user.id,
+          type: "Profile",
+          content,
+        },
+      ]);
+    } catch (err) {
+      console.log("History save skipped:", err.message);
+    }
   };
 
   const handleAnalyze = async () => {
@@ -45,11 +65,13 @@ function ProfileAnalyzer() {
       });
 
       setResult(response);
-      await saveHistory({
-        type: "profile",
-        input: { profile: cleanProfile },
-        output: response,
-      });
+
+      await saveHistory(
+        response.suggestions?.join("\n") ||
+          response.strengths?.join("\n") ||
+          "Profile analysis completed successfully."
+      );
+
       showToast("Profile analyzed successfully.", "success");
     } catch (err) {
       const status = err?.response?.status;
@@ -69,7 +91,7 @@ function ProfileAnalyzer() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-8">
+        <div className="min-h-screen bg-gray-50 p-6 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
 
         {/* Header */}
@@ -115,9 +137,9 @@ function ProfileAnalyzer() {
           >
             {loading ? "Analyzing..." : "Analyze Profile"}
           </Button>
-
         </Card>
-                {/* Loading */}
+
+        {/* Loading */}
 
         {loading && (
           <div className="space-y-6">
@@ -163,7 +185,7 @@ function ProfileAnalyzer() {
               </div>
             </Card>
 
-            {/* What is Good */}
+            {/* Strengths */}
 
             <Card className="shadow-lg">
               <h2 className="text-xl font-bold text-green-700 mb-4">
@@ -182,7 +204,7 @@ function ProfileAnalyzer() {
               </ul>
             </Card>
 
-            {/* Improvements */}
+            {/* Weaknesses */}
 
             <Card className="shadow-lg">
               <h2 className="text-xl font-bold text-red-600 mb-4">
@@ -201,7 +223,7 @@ function ProfileAnalyzer() {
               </ul>
             </Card>
 
-            {/* AI Suggestions */}
+            {/* Suggestions */}
 
             <Card className="shadow-lg">
               <h2 className="text-xl font-bold text-blue-700 mb-4">
