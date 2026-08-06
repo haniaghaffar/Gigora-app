@@ -18,7 +18,6 @@ const createDemoAuth = () => {
     localStorage.setItem(DEMO_USER_KEY, JSON.stringify(user));
   };
 
-  const user = getStoredUser();
 
   return {
     getUser: async () => ({ data: { user: getStoredUser() } }),

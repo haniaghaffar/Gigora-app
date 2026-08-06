@@ -11,6 +11,30 @@ import Skeleton from "../components/Skeleton";
 import { supabase } from "../services/supabase";
 import { useAuth } from "../context/AuthContext";
 
+const demoHistory = [
+  {
+    id: "demo-1",
+    type: "Profile",
+    created_at: new Date().toISOString(),
+    content:
+      "Profile analysis completed successfully. AI reviewed your freelancer profile and suggested measurable achievements, stronger keywords and improved communication.",
+  },
+  {
+    id: "demo-2",
+    type: "SEO",
+    created_at: new Date(Date.now() - 86400000).toISOString(),
+    content:
+      "SEO optimization completed. Optimized title, description and keyword recommendations generated for better search visibility.",
+  },
+  {
+    id: "demo-3",
+    type: "Proposal",
+    created_at: new Date(Date.now() - 172800000).toISOString(),
+    content:
+      "Proposal generated for a React Frontend project including responsive design, API integration and clean UI implementation.",
+  },
+];
+
 function History() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -18,30 +42,6 @@ function History() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
-
-  const demoHistory = [
-    {
-      id: "demo-1",
-      type: "Profile",
-      created_at: new Date().toISOString(),
-      content:
-        "Profile analysis completed successfully. AI reviewed your freelancer profile and suggested measurable achievements, stronger keywords and improved communication.",
-    },
-    {
-      id: "demo-2",
-      type: "SEO",
-      created_at: new Date(Date.now() - 86400000).toISOString(),
-      content:
-        "SEO optimization completed. Optimized title, description and keyword recommendations generated for better search visibility.",
-    },
-    {
-      id: "demo-3",
-      type: "Proposal",
-      created_at: new Date(Date.now() - 172800000).toISOString(),
-      content:
-        "Proposal generated for a React Frontend project including responsive design, API integration and clean UI implementation.",
-    },
-  ];
 
   const loadHistory = useCallback(async () => {
     setLoading(true);
@@ -86,13 +86,10 @@ function History() {
   useEffect(() => {
     loadHistory();
   }, [loadHistory]);
-
-  const handleDelete = async (id) => {
+    const handleDelete = async (id) => {
     try {
       if (String(id).startsWith("demo-")) {
-        setHistory((prev) =>
-          prev.filter((item) => item.id !== id)
-        );
+        setHistory((prev) => prev.filter((item) => item.id !== id));
 
         if (selectedItem?.id === id) {
           setSelectedItem(null);
@@ -109,9 +106,7 @@ function History() {
 
       if (error) throw error;
 
-      setHistory((prev) =>
-        prev.filter((item) => item.id !== id)
-      );
+      setHistory((prev) => prev.filter((item) => item.id !== id));
 
       if (selectedItem?.id === id) {
         setSelectedItem(null);
@@ -123,11 +118,10 @@ function History() {
       toast.error("Unable to delete history.");
     }
   };
-    return (
+
+  return (
     <div className="p-6 md:p-8 space-y-8">
-
       {/* Header */}
-
       <div>
         <h1 className="text-3xl font-bold text-gray-900">
           Activity History
@@ -139,7 +133,6 @@ function History() {
       </div>
 
       {/* Loading */}
-
       {loading && (
         <div className="space-y-4">
           <Skeleton className="h-32" />
@@ -149,15 +142,10 @@ function History() {
       )}
 
       {/* Empty State */}
-
       {!loading && history.length === 0 && (
         <Card className="text-center py-12">
-
           <div className="flex justify-center">
-            <FileText
-              size={48}
-              className="text-gray-400"
-            />
+            <FileText size={48} className="text-gray-400" />
           </div>
 
           <h2 className="text-xl font-semibold mt-4">
@@ -174,34 +162,28 @@ function History() {
           >
             Start Generating
           </Button>
-
         </Card>
       )}
 
       {/* History List */}
-
       {!loading && history.length > 0 && (
-
         <div className="space-y-5">
-
           {history.map((item) => (
-
             <Card
               key={item.id}
               className="border border-gray-200 hover:shadow-md transition"
             >
-
               <div className="flex flex-col md:flex-row md:justify-between gap-5">
-
                 <div className="flex-1">
-
                   <span className="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
                     {item.type}
                   </span>
 
                   <p className="text-sm text-gray-400 mt-3">
                     {item.created_at || item.date
-                      ? new Date(item.created_at || item.date).toLocaleString()
+                      ? new Date(
+                          item.created_at || item.date
+                        ).toLocaleString()
                       : "No Date"}
                   </p>
 
@@ -209,17 +191,15 @@ function History() {
                     {String(item.content || "")
                       .substring(0, 150)
                       .concat(
-                        String(item.content || "").length > 150 ? "..." : ""
+                        String(item.content || "").length > 150
+                          ? "..."
+                          : ""
                       )}
                   </p>
-
                 </div>
 
                 <div className="flex gap-3 items-center">
-
-                  <Button
-                    onClick={() => setSelectedItem(item)}
-                  >
+                  <Button onClick={() => setSelectedItem(item)}>
                     View
                   </Button>
 
@@ -229,46 +209,36 @@ function History() {
                   >
                     Delete
                   </Button>
-
                 </div>
-
               </div>
-
             </Card>
-
           ))}
-
         </div>
-
       )}
 
       {/* Modal */}
-
       <Modal
         isOpen={Boolean(selectedItem)}
         onClose={() => setSelectedItem(null)}
         title={selectedItem?.type || "History Details"}
       >
-
         <div className="space-y-5">
-
           <p className="text-gray-700 whitespace-pre-line max-h-96 overflow-y-auto">
             {selectedItem?.content || "No content available."}
           </p>
 
           <Button
             onClick={() => {
-              navigator.clipboard.writeText(selectedItem?.content || "");
+              navigator.clipboard.writeText(
+                selectedItem?.content || ""
+              );
               toast.success("Copied to clipboard");
             }}
           >
             Copy Content
           </Button>
-
         </div>
-
       </Modal>
-
     </div>
   );
 }
