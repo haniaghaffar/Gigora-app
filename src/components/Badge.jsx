@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, XCircle, AlertCircle, Tag } from 'lucide-react';
+import { CheckCircle, XCircle, AlertCircle} from 'lucide-react';
 
 /**
  * Badge component with variants.
