@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import BetaBanner from "../components/BetaBanner";
+import AnnouncementBanner from "../components/AnnouncementBanner";
 
 export default function MainLayout({ children }) {
   const { pathname } = useLocation();
@@ -17,7 +17,7 @@ export default function MainLayout({ children }) {
     <div className="flex flex-col min-h-screen">
       {!hideLayout && (
         <>
-          <BetaBanner />
+          <AnnouncementBanner />
           <Navbar />
         </>
       )}
