@@ -1,70 +1,196 @@
-# Getting Started with Create React App
+# Gigora — Win Every Gig with AI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Gigora is an AI-powered freelancer assistant developed to help freelancers improve their presence on platforms like Fiverr and Upwork. The platform provides AI-driven tools for profile analysis, gig SEO optimization, and proposal generation.
 
-## Available Scripts
+## About the Project
 
-In the project directory, you can run:
+Gigora was developed as part of a **Software Development Internship at Mufasa Developers**.
 
-### `npm start`
+The project provided hands-on experience in frontend development, backend integration, API integration, authentication, and product development while building a practical AI-powered solution for freelancers.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Profile Analyzer
 
-### `npm test`
+Helps freelancers evaluate and improve their profiles through AI-powered insights, including:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* Profile description
+* Skills presentation
+* Professional positioning
+* Overall profile quality
 
-### `npm run build`
+### Gig SEO
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Helps freelancers optimize their Fiverr gigs with AI-powered suggestions for:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* Gig titles
+* Keywords
+* Descriptions
+* Search visibility
+* Better gig positioning
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Proposal Generator
 
-### `npm run eject`
+Generates professional and relevant proposals based on:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* Client requirements
+* Project details
+* Freelancer skills
+* Job context
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The goal is to reduce repetitive work and help freelancers create more relevant proposals.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Tech Stack
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Frontend
 
-## Learn More
+* React.js
+* JavaScript
+* CSS
+* Responsive UI
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Backend & Services
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* Supabase
+* REST API integration
+* Authentication
+* Database services
 
-### Code Splitting
+### Development Tools
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* Git
+* GitHub
+* Vercel
 
-### Analyzing the Bundle Size
+## Core Workflow
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```text
+Freelancer
+     │
+     ▼
+   Gigora
+     │
+     ├── Profile Analyzer
+     │
+     ├── Gig SEO
+     │
+     └── Proposal Generator
+     │
+     ▼
+AI-Powered Recommendations
+     │
+     ▼
+Improved Freelance Presence
+```
 
-### Making a Progressive Web App
+## Authentication
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Gigora uses Supabase Authentication to provide secure user access.
 
-### Advanced Configuration
+The application includes:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* User registration
+* User login
+* Protected dashboard
+* Authentication state management
+* User-specific application flow
 
-### Deployment
+## Getting Started
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Clone the Repository
 
-### `npm run build` fails to minify
+```bash
+git clone https://github.com/haniaghaffar/Gigora-app.git
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Navigate to the Project
+
+```bash
+cd Gigora-app
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+REACT_APP_SUPABASE_URL=your_supabase_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Do not commit sensitive credentials or API keys to the repository.
+
+### Run the Development Server
+
+```bash
+npm start
+```
+
+The application will be available at:
+
+```text
+http://localhost:3000
+```
+
+## Deployment
+
+Gigora can be deployed using Vercel.
+
+Before deployment, configure the required environment variables in the Vercel project settings.
+
+## Key Development Areas
+
+During the development of Gigora, the project involved working with:
+
+* React component development
+* Responsive UI implementation
+* Authentication
+* Supabase integration
+* REST API integration
+* CRUD operations
+* Protected routes
+* Product-focused feature development
+* Git and GitHub workflow
+* Deployment with Vercel
+
+## Future Improvements
+
+Potential future enhancements include:
+
+* Advanced AI-powered profile scoring
+* AI keyword research
+* Proposal history and management
+* Gig performance analytics
+* Freelancer performance tracking
+* Additional freelance platform integrations
+* Personalized recommendations
+* Advanced AI automation workflows
+
+## Project Status
+
+Gigora was developed as a **Software Development Internship project at Mufasa Developers** and serves as a practical implementation of an AI-powered productivity platform for freelancers.
+
+## Internship
+
+**Organization:** Mufasa Developers
+**Role:** Software Development Intern
+**Project:** Gigora — AI Freelancer Assistant
+
+## Author
+
+**Hania Ghaffar**
+
+BS Software Engineering
+Frontend Development | Artificial Intelligence
+
+---
+
+## License
+
+This project was developed as part of a software development internship and is intended for educational and portfolio purposes.
