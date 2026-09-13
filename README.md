@@ -182,15 +182,6 @@ Gigora was developed as a **Software Development Internship project at Mufasa De
 **Role:** Software Development Intern
 **Project:** Gigora — AI Freelancer Assistant
 
-## Author
-
-**Hania Ghaffar**
-
-BS Software Engineering
-Frontend Development | Artificial Intelligence
-
----
-
 ## License
 
 This project was developed as part of a software development internship and is intended for educational and portfolio purposes.
